@@ -51,6 +51,7 @@ public class FileSystemResourceLoader extends DefaultResourceLoader {
 		if (path.startsWith("/")) {
 			path = path.substring(1);
 		}
+		//这里使用文件系统资源对象来定义bean文件
 		return new FileSystemContextResource(path);
 	}
 
