@@ -129,26 +129,39 @@ public class PropertyPlaceholderHelper {
 
 		StringBuilder result = new StringBuilder(value);
 
+		//检查这个字符串时候有 ${ 前缀
 		int startIndex = value.indexOf(this.placeholderPrefix);
 		while (startIndex != -1) {
+			//如果有 ${ 前缀，再检查是否有 } 后缀
 			int endIndex = findPlaceholderEndIndex(result, startIndex);
 			if (endIndex != -1) {
+				//拿到占位符，如classpath:spring${key}.xml,这个占位符是key
 				String placeholder = result.substring(startIndex + this.placeholderPrefix.length(), endIndex);
 				String originalPlaceholder = placeholder;
+				//将当前的占位符存到set集合中，如果set集合有了，就会添加失败
+				//就会报错，循环引用错误，比如${a},这个a的值依然是${a}
+				//这样就陷入了无限解析了，根本停不下来
 				if (!visitedPlaceholders.add(originalPlaceholder)) {
 					throw new IllegalArgumentException(
 							"Circular placeholder reference '" + originalPlaceholder + "' in property definitions");
 				}
 				// Recursive invocation, parsing placeholders contained in the placeholder key.
+				//对占位符进行解析，如：${${a}},所以要继续解析
 				placeholder = parseStringValue(placeholder, placeholderResolver, visitedPlaceholders);
 				// Now obtain the value for the fully resolved key...
+				//调用这个解析器查找占位符对应的值，这个方法的代码在下面11步给出
 				String propVal = placeholderResolver.resolvePlaceholder(placeholder);
 				if (propVal == null && this.valueSeparator != null) {
+					//如果为null，那么查找这个propVal是否为：分割的字符串
 					int separatorIndex = placeholder.indexOf(this.valueSeparator);
 					if (separatorIndex != -1) {
+						//如果propVal为key:Context,那么这个值应为key
 						String actualPlaceholder = placeholder.substring(0, separatorIndex);
+						//如果propVal为key:Context,那么就是Context
 						String defaultValue = placeholder.substring(separatorIndex + this.valueSeparator.length());
+						//跟上面的一样去系统属性中查找
 						propVal = placeholderResolver.resolvePlaceholder(actualPlaceholder);
+						//如果为空，那么就设置为defaultValue，如key:Context
 						if (propVal == null) {
 							propVal = defaultValue;
 						}
@@ -157,13 +170,18 @@ public class PropertyPlaceholderHelper {
 				if (propVal != null) {
 					// Recursive invocation, parsing placeholders contained in the
 					// previously resolved placeholder value.
+					//这个值可能也有站位符，继续递归解析
 					propVal = parseStringValue(propVal, placeholderResolver, visitedPlaceholders);
+					//得到了占位符对应的值后替换掉占位符
 					result.replace(startIndex, endIndex + this.placeholderSuffix.length(), propVal);
 					if (logger.isTraceEnabled()) {
 						logger.trace("Resolved placeholder '" + placeholder + "'");
 					}
+					//继续查找是否还有后续的占位符
 					startIndex = result.indexOf(this.placeholderPrefix, startIndex + propVal.length());
 				}
+				//如果propValue为null，那么就说明这个占位符没有值，如果设置为忽略
+				//不能解析的占位符，那么继续后续的占位符，否则报错
 				else if (this.ignoreUnresolvablePlaceholders) {
 					// Proceed with unprocessed value.
 					startIndex = result.indexOf(this.placeholderPrefix, endIndex + this.placeholderSuffix.length());
@@ -172,6 +190,7 @@ public class PropertyPlaceholderHelper {
 					throw new IllegalArgumentException("Could not resolve placeholder '" +
 							placeholder + "'" + " in value \"" + value + "\"");
 				}
+				//解析成功就删除set集合中对应的占位符
 				visitedPlaceholders.remove(originalPlaceholder);
 			}
 			else {

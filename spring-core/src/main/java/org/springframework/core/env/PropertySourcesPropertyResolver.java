@@ -74,6 +74,7 @@ public class PropertySourcesPropertyResolver extends AbstractPropertyResolver {
 		return getProperty(key, String.class, false);
 	}
 
+	//参数说明，key是传进来的占位符，targetValueType指的是目标类型，这里肯定是String.class, resolveNestedPlaceholders表示是否要对嵌套的占位符进行解析，这里传的是false，不需要。
 	@Nullable
 	protected <T> T getProperty(String key, Class<T> targetValueType, boolean resolveNestedPlaceholders) {
 		if (this.propertySources != null) {
@@ -82,8 +83,10 @@ public class PropertySourcesPropertyResolver extends AbstractPropertyResolver {
 					logger.trace("Searching for key '" + key + "' in PropertySource '" +
 							propertySource.getName() + "'");
 				}
+				//从系统属性中寻找值
 				Object value = propertySource.getProperty(key);
 				if (value != null) {
+					//如果允许解析嵌入的${}，并且是String类型的就继续解析
 					if (resolveNestedPlaceholders && value instanceof String) {
 						value = resolveNestedPlaceholders((String) value);
 					}
