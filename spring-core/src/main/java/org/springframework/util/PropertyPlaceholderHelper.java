@@ -121,6 +121,7 @@ public class PropertyPlaceholderHelper {
 	 */
 	public String replacePlaceholders(String value, PlaceholderResolver placeholderResolver) {
 		Assert.notNull(value, "'value' must not be null");
+		//替换占位符逻辑
 		return parseStringValue(value, placeholderResolver, new HashSet<>());
 	}
 

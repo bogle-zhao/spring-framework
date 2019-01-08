@@ -109,6 +109,7 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 
 	private final MutablePropertySources propertySources = new MutablePropertySources(this.logger);
 
+	////PropertyResolver : Environment的顶层接口，主要提供属性检索和解析带占位符的文本。
 	private final ConfigurablePropertyResolver propertyResolver =
 			new PropertySourcesPropertyResolver(this.propertySources);
 
@@ -121,6 +122,7 @@ public abstract class AbstractEnvironment implements ConfigurableEnvironment {
 	 * @see #customizePropertySources(MutablePropertySources)
 	 */
 	public AbstractEnvironment() {
+		//这个抽象方法在StandardEnvironment中实现
 		customizePropertySources(this.propertySources);
 		if (logger.isDebugEnabled()) {
 			logger.debug("Initialized " + getClass().getSimpleName() + " with PropertySources " + this.propertySources);
