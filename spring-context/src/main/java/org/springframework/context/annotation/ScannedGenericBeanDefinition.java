@@ -46,8 +46,11 @@ import org.springframework.util.Assert;
  * @see AnnotatedGenericBeanDefinition
  */
 @SuppressWarnings("serial")
+//实现类二：支持注释元数据bean定义
+//通过 Annotation 配置方式定义的 Bean 属性经 Spring 框架解析后会封装成 ScannedGenericBeanDefinition
 public class ScannedGenericBeanDefinition extends GenericBeanDefinition implements AnnotatedBeanDefinition {
 
+	//当前bean的注解元数据
 	private final AnnotationMetadata metadata;
 
 
@@ -56,13 +59,14 @@ public class ScannedGenericBeanDefinition extends GenericBeanDefinition implemen
 	 * given MetadataReader describes.
 	 * @param metadataReader the MetadataReader for the scanned target class
 	 */
+	//metadatareader:扫描指定类的注释元数据
 	public ScannedGenericBeanDefinition(MetadataReader metadataReader) {
 		Assert.notNull(metadataReader, "MetadataReader must not be null");
 		this.metadata = metadataReader.getAnnotationMetadata();
 		setBeanClassName(this.metadata.getClassName());
 	}
 
-
+	//获取bean的注解元数据
 	@Override
 	public final AnnotationMetadata getMetadata() {
 		return this.metadata;

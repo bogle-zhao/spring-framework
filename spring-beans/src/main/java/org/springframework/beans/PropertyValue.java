@@ -39,6 +39,7 @@ import org.springframework.util.ObjectUtils;
  * @see PropertyValues
  * @see BeanWrapper
  */
+//PropertyValue具备Name和Value属性,继承了BeanMetadataAttributeAccessor,那么可以理解PropertyValue具备动态扩展属性的能力
 @SuppressWarnings("serial")
 public class PropertyValue extends BeanMetadataAttributeAccessor implements Serializable {
 

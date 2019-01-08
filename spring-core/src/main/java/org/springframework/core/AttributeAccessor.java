@@ -25,6 +25,8 @@ import org.springframework.lang.Nullable;
  * @author Rob Harrop
  * @since 2.0
  */
+//定义了对对象元数据访问的抽象接
+// 方法包括：设置元数据、获取元数据、删除元数据、判断元数据是否存在、列出元数据属性名称。
 public interface AttributeAccessor {
 
 	/**

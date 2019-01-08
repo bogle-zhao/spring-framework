@@ -31,6 +31,7 @@ import org.springframework.lang.Nullable;
  * @see AnnotatedGenericBeanDefinition
  * @see org.springframework.core.type.AnnotationMetadata
  */
+//接口:支持注释元数据的bean定义
 public interface AnnotatedBeanDefinition extends BeanDefinition {
 
 	/**
@@ -38,6 +39,7 @@ public interface AnnotatedBeanDefinition extends BeanDefinition {
 	 * for this bean definition's bean class.
 	 * @return the annotation metadata object (never {@code null})
 	 */
+	//获取此bean定义bean类的注释元数据（以及基本类元数据）。
 	AnnotationMetadata getMetadata();
 
 	/**

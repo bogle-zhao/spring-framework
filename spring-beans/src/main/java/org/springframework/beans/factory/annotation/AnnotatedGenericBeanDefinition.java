@@ -41,8 +41,10 @@ import org.springframework.util.Assert;
  * @see org.springframework.core.type.StandardAnnotationMetadata
  */
 @SuppressWarnings("serial")
+//实现类一：支持注释元数据的普通bean定义
 public class AnnotatedGenericBeanDefinition extends GenericBeanDefinition implements AnnotatedBeanDefinition {
 
+	//当前bean的注解元数据
 	private final AnnotationMetadata metadata;
 
 	@Nullable
@@ -53,6 +55,7 @@ public class AnnotatedGenericBeanDefinition extends GenericBeanDefinition implem
 	 * Create a new AnnotatedGenericBeanDefinition for the given bean class.
 	 * @param beanClass the loaded bean class
 	 */
+	//通过给定beanClass 构造对象
 	public AnnotatedGenericBeanDefinition(Class<?> beanClass) {
 		setBeanClass(beanClass);
 		this.metadata = new StandardAnnotationMetadata(beanClass, true);
@@ -68,6 +71,7 @@ public class AnnotatedGenericBeanDefinition extends GenericBeanDefinition implem
 	 * @param metadata the annotation metadata for the bean class in question
 	 * @since 3.1.1
 	 */
+	//给定注解元数据，构造对象
 	public AnnotatedGenericBeanDefinition(AnnotationMetadata metadata) {
 		Assert.notNull(metadata, "AnnotationMetadata must not be null");
 		if (metadata instanceof StandardAnnotationMetadata) {
@@ -94,6 +98,7 @@ public class AnnotatedGenericBeanDefinition extends GenericBeanDefinition implem
 	}
 
 
+	//获取bean的注解元数据
 	@Override
 	public final AnnotationMetadata getMetadata() {
 		 return this.metadata;

@@ -25,12 +25,14 @@ import org.springframework.lang.Nullable;
  * @author Juergen Hoeller
  * @since 2.0
  */
+//接口：用于承载bean对象
 public interface BeanMetadataElement {
 
 	/**
 	 * Return the configuration source {@code Object} for this metadata element
 	 * (may be {@code null}).
 	 */
+	//获取当前元素的配置源bean对象
 	@Nullable
 	Object getSource();
 

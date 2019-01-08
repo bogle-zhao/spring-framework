@@ -37,8 +37,10 @@ import org.springframework.lang.Nullable;
  * @see ChildBeanDefinition
  */
 @SuppressWarnings("serial")
+//GenericBeanDefinition是自2.5以后新加入的bean文件配置属性定义类，是一站式服务类，用于替代ChildBeanDefinition类
 public class GenericBeanDefinition extends AbstractBeanDefinition {
 
+	//父bean名称
 	@Nullable
 	private String parentName;
 
@@ -65,6 +67,7 @@ public class GenericBeanDefinition extends AbstractBeanDefinition {
 	}
 
 
+	//设置parentName
 	@Override
 	public void setParentName(@Nullable String parentName) {
 		this.parentName = parentName;
@@ -77,6 +80,7 @@ public class GenericBeanDefinition extends AbstractBeanDefinition {
 	}
 
 
+	//深度拷贝自身
 	@Override
 	public AbstractBeanDefinition cloneBeanDefinition() {
 		return new GenericBeanDefinition(this);

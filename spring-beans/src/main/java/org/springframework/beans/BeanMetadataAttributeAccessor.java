@@ -27,6 +27,8 @@ import org.springframework.lang.Nullable;
  * @author Juergen Hoeller
  * @since 2.5
  */
+//BeanMetadataAttributeAccessor继承自AttributeAccessorSupport,
+//其重写了相关方法,对象BeanMetadataAttribute定义了key和value2个属性
 @SuppressWarnings("serial")
 public class BeanMetadataAttributeAccessor extends AttributeAccessorSupport implements BeanMetadataElement {
 

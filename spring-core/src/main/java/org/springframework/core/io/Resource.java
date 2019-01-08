@@ -57,6 +57,7 @@ public interface Resource extends InputStreamSource {
 	 * existence of a {@code Resource} handle only guarantees a valid
 	 * descriptor handle.
 	 */
+	//返回当前Resource代表的底层资源是否存在，true表示存在。
 	boolean exists();
 
 	/**
@@ -68,6 +69,7 @@ public interface Resource extends InputStreamSource {
 	 * that the resource content cannot be read.
 	 * @see #getInputStream()
 	 */
+	//返回当前Resource代表的底层资源是否可读，true表示可读。
 	default boolean isReadable() {
 		return true;
 	}
@@ -78,6 +80,7 @@ public interface Resource extends InputStreamSource {
 	 * and must be read and closed to avoid resource leaks.
 	 * <p>Will be {@code false} for typical resource descriptors.
 	 */
+	//返回当前Resource代表的底层资源是否已经打开，如果返回true，则只能被读取一次然后关闭以避免资源泄露；常见的Resource实现一般返回false。
 	default boolean isOpen() {
 		return false;
 	}
@@ -90,6 +93,7 @@ public interface Resource extends InputStreamSource {
 	 * @since 5.0
 	 * @see #getFile()
 	 */
+	//返回当前Resource代表的底层是否为文件
 	default boolean isFile() {
 		return false;
 	}
@@ -99,6 +103,7 @@ public interface Resource extends InputStreamSource {
 	 * @throws IOException if the resource cannot be resolved as URL,
 	 * i.e. if the resource is not available as descriptor
 	 */
+	//如果当前Resource代表的底层资源能由java.util.URL代表，则返回该URL，否则抛出IOException。
 	URL getURL() throws IOException;
 
 	/**
@@ -107,6 +112,7 @@ public interface Resource extends InputStreamSource {
 	 * i.e. if the resource is not available as descriptor
 	 * @since 2.5
 	 */
+	//如果当前Resource代表的底层资源能由java.util.URI代表，则返回该URI，否则抛出IOException。
 	URI getURI() throws IOException;
 
 	/**
@@ -116,6 +122,7 @@ public interface Resource extends InputStreamSource {
 	 * @throws IOException in case of general resolution/reading failures
 	 * @see #getInputStream()
 	 */
+	//如果当前Resource代表的底层资源能由java.io.File代表，则返回该File，否则抛出IOException。
 	File getFile() throws IOException;
 
 	/**
@@ -138,6 +145,7 @@ public interface Resource extends InputStreamSource {
 	 * @throws IOException if the resource cannot be resolved
 	 * (in the file system or as some other known physical resource type)
 	 */
+	//返回当前Resource代表的底层文件资源的长度，一般是值代表的文件资源的长度。
 	long contentLength() throws IOException;
 
 	/**
@@ -145,6 +153,7 @@ public interface Resource extends InputStreamSource {
 	 * @throws IOException if the resource cannot be resolved
 	 * (in the file system or as some other known physical resource type)
 	 */
+	//返回当前Resource代表的底层资源的最后修改时间。
 	long lastModified() throws IOException;
 
 	/**
@@ -153,6 +162,7 @@ public interface Resource extends InputStreamSource {
 	 * @return the resource handle for the relative resource
 	 * @throws IOException if the relative resource cannot be determined
 	 */
+	//用于创建相对于当前Resource代表的底层资源的资源，比如当前Resource代表文件资源“d:/test/”则createRelative（“test.txt”）将返回表文件资源“d:/test/test.txt”Resource资源。
 	Resource createRelative(String relativePath) throws IOException;
 
 	/**
@@ -161,6 +171,7 @@ public interface Resource extends InputStreamSource {
 	 * <p>Returns {@code null} if this type of resource does not
 	 * have a filename.
 	 */
+	//返回当前Resource代表的底层文件资源的文件路径，比如File资源“file://d:/test.txt”将返回“d:/test.txt”，而URL资源http://www.javass.cn将返回“”，因为只返回文件路径。
 	@Nullable
 	String getFilename();
 
@@ -171,6 +182,7 @@ public interface Resource extends InputStreamSource {
 	 * from their {@code toString} method.
 	 * @see Object#toString()
 	 */
+	//返回当前Resource代表的底层资源的描述符，通常就是资源的全路径（实际文件名或实际URL地址）。
 	String getDescription();
 
 }

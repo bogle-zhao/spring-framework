@@ -46,6 +46,7 @@ import org.springframework.util.ObjectUtils;
 @SuppressWarnings("serial")
 public class ChildBeanDefinition extends AbstractBeanDefinition {
 
+	//父bean名称
 	@Nullable
 	private String parentName;
 
@@ -59,6 +60,7 @@ public class ChildBeanDefinition extends AbstractBeanDefinition {
 	 * @see #setConstructorArgumentValues
 	 * @see #setPropertyValues
 	 */
+	//构造方法
 	public ChildBeanDefinition(String parentName) {
 		super();
 		this.parentName = parentName;
@@ -130,6 +132,7 @@ public class ChildBeanDefinition extends AbstractBeanDefinition {
 	}
 
 
+	//设置parentName
 	@Override
 	public void setParentName(@Nullable String parentName) {
 		this.parentName = parentName;
@@ -141,6 +144,7 @@ public class ChildBeanDefinition extends AbstractBeanDefinition {
 		return this.parentName;
 	}
 
+	//验证当前bean定义
 	@Override
 	public void validate() throws BeanDefinitionValidationException {
 		super.validate();
@@ -150,6 +154,7 @@ public class ChildBeanDefinition extends AbstractBeanDefinition {
 	}
 
 
+	//深度拷贝bean定义
 	@Override
 	public AbstractBeanDefinition cloneBeanDefinition() {
 		return new ChildBeanDefinition(this);

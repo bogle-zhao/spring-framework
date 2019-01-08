@@ -53,16 +53,20 @@ import org.springframework.util.Assert;
 @SuppressWarnings("serial")
 public class RootBeanDefinition extends AbstractBeanDefinition {
 
+	//bean定义的持有者(修饰bean定义)
 	@Nullable
 	private BeanDefinitionHolder decoratedDefinition;
 
 	@Nullable
 	private AnnotatedElement qualifiedElement;
 
+	//默认允许缓存
 	boolean allowCaching = true;
 
+	//是否已经指定引用非重载方法的工厂方法名。
 	boolean isFactoryMethodUnique = false;
 
+	//bean指定的目标类型定义
 	@Nullable
 	volatile ResolvableType targetType;
 
@@ -74,32 +78,40 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	@Nullable
 	volatile ResolvableType factoryMethodReturnType;
 
+	//用于构造函数注入属性的锁对象
 	/** Common lock for the four constructor fields below */
 	final Object constructorArgumentLock = new Object();
 
 	/** Package-visible field for caching the resolved constructor or factory method */
 	@Nullable
+	//缓存已解析的构造函数或工厂方法
 	Executable resolvedConstructorOrFactoryMethod;
 
+	//将构造函数参数标记为已解析。
 	/** Package-visible field that marks the constructor arguments as resolved */
 	boolean constructorArgumentsResolved = false;
 
 	/** Package-visible field for caching fully resolved constructor arguments */
 	@Nullable
+	//缓存完全解析的构造函数参数
 	Object[] resolvedConstructorArguments;
 
 	/** Package-visible field for caching partly prepared constructor arguments */
 	@Nullable
+	//缓存部分准备好的构造函数参数
 	Object[] preparedConstructorArguments;
 
 	/** Common lock for the two post-processing fields below */
+	//后处理锁对象
 	final Object postProcessingLock = new Object();
 
 	/** Package-visible field that indicates MergedBeanDefinitionPostProcessor having been applied */
+	//表明已应用mergedbeandefinitionpostprocessor
 	boolean postProcessed = false;
 
 	/** Package-visible field that indicates a before-instantiation post-processor having kicked in */
 	@Nullable
+	//指示已启动的一个实例化之前的后置处理器。
 	volatile Boolean beforeInstantiationResolved;
 
 	@Nullable
@@ -244,11 +256,13 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	}
 
 
+	//不含有父bean定义
 	@Override
 	public String getParentName() {
 		return null;
 	}
 
+	//不含有父bean定义，否则抛错
 	@Override
 	public void setParentName(@Nullable String parentName) {
 		if (parentName != null) {
@@ -259,6 +273,7 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	/**
 	 * Register a target definition that is being decorated by this bean definition.
 	 */
+	//设置bean定义的修饰者（对bean定义进行一层修饰，持有bean定义）
 	public void setDecoratedDefinition(@Nullable BeanDefinitionHolder decoratedDefinition) {
 		this.decoratedDefinition = decoratedDefinition;
 	}
@@ -296,6 +311,7 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	 * Specify a generics-containing target type of this bean definition, if known in advance.
 	 * @since 4.3.3
 	 */
+	//设置这个bean指定的目标类型定义，如果已知的提前。
 	public void setTargetType(ResolvableType targetType) {
 		this.targetType = targetType;
 	}
@@ -325,6 +341,7 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	/**
 	 * Specify a factory method name that refers to a non-overloaded method.
 	 */
+	//指定引用非重载方法的工厂方法名。
 	public void setUniqueFactoryMethodName(String name) {
 		Assert.hasText(name, "Factory method name must not be empty");
 		setFactoryMethodName(name);
@@ -334,6 +351,7 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	/**
 	 * Check whether the given candidate qualifies as a factory method.
 	 */
+	//检查给定的候选方法是否为工厂方法
 	public boolean isFactoryMethod(Method candidate) {
 		return candidate.getName().equals(getFactoryMethodName());
 	}
@@ -342,6 +360,7 @@ public class RootBeanDefinition extends AbstractBeanDefinition {
 	 * Return the resolved factory method as a Java Method object, if available.
 	 * @return the factory method, or {@code null} if not found or not resolved yet
 	 */
+	//返回解析后的工厂方法作为Java对象方法,如果可用。
 	@Nullable
 	public Method getResolvedFactoryMethod() {
 		synchronized (this.constructorArgumentLock) {
