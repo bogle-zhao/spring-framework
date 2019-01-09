@@ -31,6 +31,7 @@ public interface PropertySources extends Iterable<PropertySource<?>> {
 	 * Return whether a property source with the given name is contained.
 	 * @param name the {@linkplain PropertySource#getName() name of the property source} to find
 	 */
+	//是否包含某个属性
 	boolean contains(String name);
 
 	/**

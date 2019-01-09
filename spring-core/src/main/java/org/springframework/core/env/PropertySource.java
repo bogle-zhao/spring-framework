@@ -90,6 +90,7 @@ public abstract class PropertySource<T> {
 	/**
 	 * Return the name of this {@code PropertySource}
 	 */
+	//属性源的名字
 	public String getName() {
 		return this.name;
 	}
@@ -97,6 +98,7 @@ public abstract class PropertySource<T> {
 	/**
 	 * Return the underlying source object for this {@code PropertySource}.
 	 */
+	//属性源（比如来自Map，那就是一个Map对象）
 	public T getSource() {
 		return this.source;
 	}
@@ -108,6 +110,7 @@ public abstract class PropertySource<T> {
 	 * a more efficient algorithm if possible.
 	 * @param name the property name to find
 	 */
+	//是否包含某个属性
 	public boolean containsProperty(String name) {
 		return (getProperty(name) != null);
 	}
@@ -118,6 +121,7 @@ public abstract class PropertySource<T> {
 	 * @param name the property to find
 	 * @see PropertyResolver#getRequiredProperty(String)
 	 */
+	//得到属性名对应的属性值
 	@Nullable
 	public abstract Object getProperty(String name);
 
