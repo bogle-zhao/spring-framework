@@ -21,6 +21,10 @@ import java.util.Locale;
 import org.springframework.lang.Nullable;
 
 /**
+ * MessageSource接口用于解决消息，支持参数化和国际化消息。
+ * spring提供了两种开箱即用的实现，基于标准java.util.ResourceBundle的实现ResourceBundleMessageSource
+ * 和在虚拟机没有重启的情况下可以重新加载消息定义的ReloadableResourceBundleMessageSource。
+ *
  * Strategy interface for resolving messages, with support for the parameterization
  * and internationalization of such messages.
  *
@@ -40,6 +44,17 @@ import org.springframework.lang.Nullable;
 public interface MessageSource {
 
 	/**
+	 * 尝试解决消息，如果没有消息发现，则返回默认的消息
+	 * @param code
+	 * 需要寻找的消息代码，比如'calculator.noRateSet'。使用此类，鼓励使用相关类型全限定的类型名
+	 * 作为base的name，这样可以避免冲突，确保最大的清晰。
+	 * @param args
+	 * 参数值，用于填充消息中的占位符，比如 "{0}", "{1,date}", "{2,time}"，没有则为null。
+	 * @param defaultMessage
+	 * 如果寻找失败，则返回默认的消息
+	 * @param locale the locale in which to do the lookup
+	 * 本地化参数
+	 *
 	 * Try to resolve the message. Return default message if no message was found.
 	 * @param code the code to lookup up, such as 'calculator.noRateSet'. Users of
 	 * this class are encouraged to base message names on the relevant fully
@@ -57,6 +72,8 @@ public interface MessageSource {
 	String getMessage(String code, @Nullable Object[] args, @Nullable String defaultMessage, Locale locale);
 
 	/**
+	 * 与上面方法不同的是，当消息不存在时，抛出NoSuchMessageException异常
+	 *
 	 * Try to resolve the message. Treat as an error if the message can't be found.
 	 * @param code the code to lookup up, such as 'calculator.noRateSet'
 	 * @param args an array of arguments that will be filled in for params within
@@ -70,6 +87,8 @@ public interface MessageSource {
 	String getMessage(String code, @Nullable Object[] args, Locale locale) throws NoSuchMessageException;
 
 	/**
+	 * 尝试解决MessageSourceResolvable中消息及消息中的参数。
+	 *
 	 * Try to resolve the message using all the attributes contained within the
 	 * {@code MessageSourceResolvable} argument that was passed in.
 	 * <p>NOTE: We must throw a {@code NoSuchMessageException} on this method

@@ -520,11 +520,18 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		synchronized (this.startupShutdownMonitor) {
 			// Prepare this context for refreshing.
 			//调用容器准备刷新的方法，获取容器的当前时间，同时给容器设置同步表示
+			//初始化前的准备工作，例如对系统属性或环境变量进行准备以及验证。
 			prepareRefresh();
-			//告诉子类启动refreshBeanFactory()方法，bean定义资源文件的载入从子类的refreshBeanFactory()方法启动
+
+			//通知子类启动refreshBeanFactory的调用
+			//初始化BeanFactory，并进行XML文件读取
+			//ClassPathXmlApplicationContext包含着BeanFactory所提供的一切特征
+			//这一步会复用BeanFactory中的配置文件读取解析以及其他功能
+			//这一步之后ClassPathXmlApplicationContext已经包含了BeanFactory所提供的功能，可以进行Bean的提取等基础操作了。
 			// Tell the subclass to refresh the internal bean factory.
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
-			//为BeanFactory配置容器特性，例如类加载器，事件处理器等
+			//准备当前上下文用的BeanFactory，为BeanFactory配置容器特性，例如类加载器，事件处理器等各种功能填充。
+			//对BeanFactory各种功能的填充，比如@Qualifier和@Autowired注解就是在这一步增加的支持
 			//准备在上下文中使用的bean工厂
 			// Prepare the bean factory for use in this context.
 			prepareBeanFactory(beanFactory);

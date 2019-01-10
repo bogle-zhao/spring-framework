@@ -38,6 +38,11 @@ public interface ApplicationEventPublisher {
 	 * @param event the event to publish
 	 * @see org.springframework.web.context.support.RequestHandledEvent
 	 */
+	/**
+	 * 通知所有注册在此应用上监听指定消息的监听器。
+	 * 发布的事件可以是任何类型的，如可能是框架相关的如RequestHandledEvent，亦有可能是
+	 * 应用相关的消息
+	 */
 	default void publishEvent(ApplicationEvent event) {
 		publishEvent((Object) event);
 	}
@@ -50,6 +55,10 @@ public interface ApplicationEventPublisher {
 	 * @param event the event to publish
 	 * @since 4.2
 	 * @see PayloadApplicationEvent
+	 */
+	/**
+	 * 通知所有注册在此应用上监听指定消息的监听器。
+	 * 如果参数中的Event不是ApplicationEvent，则其应该包装成PayloadApplicationEvent
 	 */
 	void publishEvent(Object event);
 

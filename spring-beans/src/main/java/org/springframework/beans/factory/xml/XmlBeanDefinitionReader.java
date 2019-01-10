@@ -516,6 +516,8 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	//按照Spring的bean语义要求将bean定义资源解析并转换为容器内部数据接口
 	public int registerBeanDefinitions(Document doc, Resource resource) throws BeanDefinitionStoreException {
 		//得到BeanDefinitionDocumentReader来对xml格式的BeanDefinition解析
+		//先实例化一个BeanDefinitionDocumentReader，这个对象是通过BeanUtils.instantiateClass方法实例化出来的
+		//实际上BeanUtils.instantiateClass中是封装了Java的反射的一些方法，通过基本的Java反射来构造实例。
 		BeanDefinitionDocumentReader documentReader = createBeanDefinitionDocumentReader();
 		//获取容器中注册的Bean数量
 		int countBefore = getRegistry().getBeanDefinitionCount();

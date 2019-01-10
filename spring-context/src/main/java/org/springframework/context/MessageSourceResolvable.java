@@ -19,6 +19,9 @@ package org.springframework.context;
 import org.springframework.lang.Nullable;
 
 /**
+ * MessageSourceResolvable接口在MessageSource接口中用于消息解决。
+ * Spring的字节错误验证validation类实现了此接口
+ *
  * Interface for objects that are suitable for message resolution in a
  * {@link MessageSource}.
  *
@@ -33,6 +36,7 @@ import org.springframework.lang.Nullable;
 public interface MessageSourceResolvable {
 
 	/**
+	 * 返回消息关联的code
 	 * Return the codes to be used to resolve this message, in the order that
 	 * they should get tried. The last code will therefore be the default one.
 	 * @return a String array of codes which are associated with this message
@@ -41,6 +45,8 @@ public interface MessageSourceResolvable {
 	String[] getCodes();
 
 	/**
+	 * 返回消息中所有的参数
+	 *
 	 * Return the array of arguments to be used to resolve this message.
 	 * <p>The default implementation simply returns {@code null}.
 	 * @return an array of objects to be used as parameters to replace
@@ -53,6 +59,8 @@ public interface MessageSourceResolvable {
 	}
 
 	/**
+	 * 返回默认的消息，如果没有则为null
+	 *
 	 * Return the default message to be used to resolve this message.
 	 * <p>The default implementation simply returns {@code null}.
 	 * Note that the default message may be identical to the primary

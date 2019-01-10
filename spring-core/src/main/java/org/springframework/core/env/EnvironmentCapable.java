@@ -17,6 +17,13 @@
 package org.springframework.core.env;
 
 /**
+ * EnvironmentCapable表示一个组件包括一个或暴露一个Environment环境引用。
+ * Spring的所有应用上下文都是EnvironmentCapable接口实现，用于应用上下文与环境交互。
+ * 需要注意的是，ApplicationContext扩展了EnvironmentCapable接口，通过getEnvironment方法暴露环境配置；
+ * 然而ConfigurableApplicationContext将会重定义getEnvironment方法，返回一个ConfigurableEnvironment。
+ * 两种方法带来的效果是，在环境配置Environment对象在ConfigurableApplicationContext可访问以前，都是自读的，
+ * 可以理解为ConfigurableApplicationContext的getEnvironment方法返回的环境对象时可修改的。
+ *
  * Interface indicating a component that contains and exposes an {@link Environment} reference.
  *
  * <p>All Spring application contexts are EnvironmentCapable, and the interface is used primarily
@@ -41,6 +48,7 @@ package org.springframework.core.env;
 public interface EnvironmentCapable {
 
 	/**
+	 * 返回组件关联的环境Environment，没有则为空。
 	 * Return the {@link Environment} associated with this component.
 	 */
 	Environment getEnvironment();
