@@ -103,6 +103,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	private Set<Exception> suppressedExceptions;
 
 	/** Flag that indicates whether we're currently within destroySingletons */
+	// 标记当前是否正在进行destroy singletons 对象
 	private boolean singletonsCurrentlyInDestruction = false;
 
 	/** Disposable bean instances: bean name --> disposable instance */
