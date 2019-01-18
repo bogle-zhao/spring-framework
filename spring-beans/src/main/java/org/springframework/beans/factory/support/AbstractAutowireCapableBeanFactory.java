@@ -1116,6 +1116,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	protected BeanWrapper createBeanInstance(String beanName, RootBeanDefinition mbd, @Nullable Object[] args) {
 		// Make sure bean class is actually resolved at this point.
 		//检查确认bean是可实例化的
+		//解析class
 		Class<?> beanClass = resolveBeanClass(mbd, beanName);
 
 		//使用工厂方法对bean进行实例化
@@ -1140,6 +1141,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		boolean resolved = false;
 		boolean autowireNecessary = false;
 		if (args == null) {
+			//一个类有多个构造函数，每个构造函数都有不同的参数，所以调用前需要先根据参数锁定
 			synchronized (mbd.constructorArgumentLock) {
 				if (mbd.resolvedConstructorOrFactoryMethod != null) {
 					resolved = true;
@@ -1147,6 +1149,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				}
 			}
 		}
+		//如果已经解析过则使用解析好的构造函数方法不需要再次锁定
 		if (resolved) {
 			if (autowireNecessary) {
 				//配置了自动装配属性，使用容器的自动装配实例化
@@ -1155,11 +1158,13 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			}
 			else {
 				//使用默认的无参构造方法实例化
+				//使用默认构造函数构造
 				return instantiateBean(beanName, mbd);
 			}
 		}
 
 		//使用bean的构造方法进行实例化
+		//需要根据参数解析构造函数
 		// Candidate constructors for autowiring?
 		Constructor<?>[] ctors = determineConstructorsFromBeanPostProcessors(beanClass, beanName);
 		if (ctors != null || mbd.getResolvedAutowireMode() == AUTOWIRE_CONSTRUCTOR ||

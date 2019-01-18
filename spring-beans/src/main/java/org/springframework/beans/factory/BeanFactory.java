@@ -194,7 +194,7 @@ public interface BeanFactory {
 	 * @since 3.0
 	 * @see ListableBeanFactory
 	 */
-	<T> T getBean(Class<T> requiredType) throws BeansException;
+	<T> T  getBean(Class<T> requiredType) throws BeansException;
 
 	/**
 	 * Return an instance, which may be shared or independent, of the specified bean.
