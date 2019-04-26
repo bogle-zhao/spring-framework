@@ -1508,6 +1508,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	 * @return the resolved value
 	 * @see #setBeanExpressionResolver
 	 */
+	//当调用这个方法时会判断是否存在语言解析器，如果存在则调用语言解析器的方法进行解析，解析的过程是在Spring的expression的包内
 	@Nullable
 	protected Object evaluateBeanDefinitionString(@Nullable String value, @Nullable BeanDefinition beanDefinition) {
 		if (this.beanExpressionResolver == null) {

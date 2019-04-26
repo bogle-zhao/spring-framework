@@ -1142,6 +1142,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		boolean autowireNecessary = false;
 		if (args == null) {
 			//一个类有多个构造函数，每个构造函数都有不同的参数，所以调用前需要先根据参数锁定
+			// 如果已缓存的解析的构造函数或者工厂方法不为空，则可以利用构造函数解析
+			// 因为需要根据参数确认到底使用哪个构造函数，该过程比较消耗性能，所有采用缓存机制
 			synchronized (mbd.constructorArgumentLock) {
 				if (mbd.resolvedConstructorOrFactoryMethod != null) {
 					resolved = true;
@@ -1149,8 +1151,10 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 				}
 			}
 		}
+		// 已经解析好了，直接注入即可
 		//如果已经解析过则使用解析好的构造函数方法不需要再次锁定
 		if (resolved) {
+			// 自动注入，调用构造函数自动注入
 			if (autowireNecessary) {
 				//配置了自动装配属性，使用容器的自动装配实例化
 				//容器的自动装配是根据参数类型匹配bean的构造方法
@@ -1165,11 +1169,14 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		//使用bean的构造方法进行实例化
 		//需要根据参数解析构造函数
+		// 确定解析的构造函数
+		// 主要是检查已经注册的 SmartInstantiationAwareBeanPostProcessor
 		// Candidate constructors for autowiring?
 		Constructor<?>[] ctors = determineConstructorsFromBeanPostProcessors(beanClass, beanName);
 		if (ctors != null || mbd.getResolvedAutowireMode() == AUTOWIRE_CONSTRUCTOR ||
 				mbd.hasConstructorArgumentValues() || !ObjectUtils.isEmpty(args))  {
 			//使用容器的自动装配特性，调用匹配的构造方法实例化
+			// 构造函数自动注入
 			return autowireConstructor(beanName, mbd, ctors, args);
 		}
 
