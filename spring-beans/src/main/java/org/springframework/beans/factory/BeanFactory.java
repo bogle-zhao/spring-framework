@@ -42,7 +42,7 @@ import org.springframework.lang.Nullable;
  * 2.0, further scopes are available depending on the concrete application
  * context (e.g. "request" and "session" scopes in a web environment).
  *
- * 这种设计方法的重点是BeanFactory是应用程序组件的中央注册表，它组件做了中央的处理和管理，它不需要每个组件读取自己的配置
+ * 这种设计方法的重点是BeanFactory是应用程序组件的中央注册表，它对组件做了中央的处理和管理，它不需要每个组件读取自己的配置
  * 它是由beanfactory统一管理
  * <p>The point of this approach is that the BeanFactory is a central registry
  * of application components, and centralizes configuration of application
@@ -58,7 +58,7 @@ import org.springframework.lang.Nullable;
  * BeanFactory lookup. Spring's Dependency Injection functionality is
  * implemented using this BeanFactory interface and its subinterfaces.
  *
- * 通常一个BeanFactory会加载存储在配置资源文件（如XML文档）中的bean定义，然后使用org.springframework.beans通常一个BeanFactory会加载存储在配置资源文件（如XML文档）中的bean定义，然后使用org.springframework.beans
+ * 通常一个BeanFactory会加载存储在配置资源文件（如XML文档）中的bean定义，然后使用org.springframework.beans
  * 包来配置对象。然而，一些简单的实现可以直接返回直接在JAVA 代码中返回的对象。
  * 此接口没有bean定义存储的约束，可以是：LDAP, RDBMS, XML,properties file等。
  * 鼓励实现此接口支持依赖注入。
@@ -80,6 +80,7 @@ import org.springframework.lang.Nullable;
  * the immediate parent factory will be asked. Beans in this factory instance
  * are supposed to override beans of the same name in any parent factory.
  *
+ * Bean factory实现应该支持Bean标准的生命周期实现，完整的初始化方法以及标准的顺序是如下列表
  * <p>Bean factory implementations should support the standard bean lifecycle interfaces
  * as far as possible. The full set of initialization methods and their standard order is:
  * <ol>
@@ -104,6 +105,7 @@ import org.springframework.lang.Nullable;
  * <li>{@code postProcessAfterInitialization} methods of BeanPostProcessors
  * </ol>
  *
+ *  bean factory 销毁时，会执行如下的生命周期
  * <p>On shutdown of a bean factory, the following lifecycle methods apply:
  * <ol>
  * <li>{@code postProcessBeforeDestruction} methods of DestructionAwareBeanPostProcessors
