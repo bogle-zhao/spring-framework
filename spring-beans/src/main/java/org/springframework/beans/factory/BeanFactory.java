@@ -21,11 +21,16 @@ import org.springframework.core.ResolvableType;
 import org.springframework.lang.Nullable;
 
 /**
+ * 这个接口是用于访问spring容器的根入口，它是bean容器的客户端视图，更近一步的接口ListableBeanFactory，ConfigurableBeanFactory
  * The root interface for accessing a Spring bean container.
  * This is the basic client view of a bean container;
  * further interfaces such as {@link ListableBeanFactory} and
  * {@link org.springframework.beans.factory.config.ConfigurableBeanFactory}
  * are available for specific purposes.
+ *
+ * 这个接口被对象实现，这个对象持有大量的bean定义，每一个对象通常都是由一个唯一的string名字来标识的，
+ * 根据bean定义的不同，这个工厂会创建每一个对象所独立的实例（Prototype类型）或者返回一个所有对象所共享的对象实例（Singleton类型）
+ * 在Singleton类型实例，在factory中是唯一的，它们的创建取决于bean的配置，他们的api是相同的，在spring2.0中，出现更多的范围，取决具体的应用上下文（比如web上下文）
  *
  * <p>This interface is implemented by objects that hold a number of bean definitions,
  * each uniquely identified by a String name. Depending on the bean definition,
@@ -37,6 +42,8 @@ import org.springframework.lang.Nullable;
  * 2.0, further scopes are available depending on the concrete application
  * context (e.g. "request" and "session" scopes in a web environment).
  *
+ * 这种设计方法的重点是BeanFactory是应用程序组件的中央注册表，它组件做了中央的处理和管理，它不需要每个组件读取自己的配置
+ * 它是由beanfactory统一管理
  * <p>The point of this approach is that the BeanFactory is a central registry
  * of application components, and centralizes configuration of application
  * components (no more do individual objects need to read properties files,
