@@ -137,8 +137,8 @@ public interface BeanFactory {
 
 	/**
 	 * 用于区别FactoryBean,和FactoryBean创建的beans。
-	 * 例如：如果一个名字为myJndiObject的FactoryBean，BeanFactory调用getBean("myJndiObject")方法时返回的不是该FactoryBean
-	 * 实例，而是该FactoryBean调用其自身getObject方法返回的对象，要想返回该FactoryBean实例，则需要BeanFactory实例
+	 * 例如：如果一个名字为myJndiObject的FactoryBean，BeanFactory调用getBean("myJndiObject")方法时返回的不是该FactoryBean实例，
+	 * 而是该FactoryBean调用其自身getObject方法返回的对象，要想返回该FactoryBean实例，则需要BeanFactory实例
 	 * 这样调用getBean("&myJndiObject")
 	 * 注：Bean和FactoryBean为Spring中的两种bean,bean为普通bean,FactoryBean为工厂bean,都规BeanFactory管理
 	 * Used to dereference a {@link FactoryBean} instance and distinguish it from
