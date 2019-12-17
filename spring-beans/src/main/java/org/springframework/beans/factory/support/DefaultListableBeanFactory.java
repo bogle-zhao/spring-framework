@@ -79,10 +79,13 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 /**
+ * Spring的 默认实现 ConfigurableListableBeanFactory 和BeanDefinitionRegistry， 一个成熟的bean工厂，基于bean定义对象
  * Spring's default implementation of the {@link ConfigurableListableBeanFactory}
  * and {@link BeanDefinitionRegistry} interfaces: a full-fledged bean factory
  * based on bean definition metadata, extensible through post-processors.
  *
+ * 典型的用法是在访问beans之前先注册所有的Bean（可能读取自一个bean定义的文件）定义（就是先把所有的BEAN初始化，而后可以直接使用）
+ * 因为操作预先创建的bean定义元数据对象，在本地bean 所以定义表中查找成为一种廉价的操作
  * <p>Typical usage is registering all bean definitions first (possibly read
  * from a bean definition file), before accessing beans. Bean lookup by name
  * is therefore an inexpensive operation in a local bean definition table,
@@ -93,6 +96,7 @@ import org.springframework.util.StringUtils;
  * see for example {@link PropertiesBeanDefinitionReader} and
  * {@link org.springframework.beans.factory.xml.XmlBeanDefinitionReader}.
  *
+ * 二选一的，此类实现了ListableBeanFactory接口，可以看一下StaticListableBeanFactory接口，它在管理已存在bean实例的时候，并不是根据bean定义创建一个新的bean
  * <p>For an alternative implementation of the
  * {@link org.springframework.beans.factory.ListableBeanFactory} interface,
  * have a look at {@link StaticListableBeanFactory}, which manages existing
@@ -145,50 +149,62 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	}
 
 
-	/** Map from serialized id to factory instance */
+	/**  序列化ID映射到工厂实例的Map Map from serialized id to factory instance */
 	private static final Map<String, Reference<DefaultListableBeanFactory>> serializableFactories =
 			new ConcurrentHashMap<>(8);
 
-	/** Optional id for this factory, for serialization purposes */
+	/** 可选ID，用于序列化： Optional id for this factory, for serialization purposes */
 	@Nullable
 	private String serializationId;
 
+	/** 是否允许同名字不同定义的bean重新注册*/
 	/** Whether to allow re-registration of a different definition with the same name */
 	private boolean allowBeanDefinitionOverriding = true;
 
+	/** 是否允许bean基至是延迟加载的bean马上加载*/
 	/** Whether to allow eager class loading even for lazy-init beans */
 	private boolean allowEagerClassLoading = true;
 
+	/** 可选的用于依赖集合和数组的比较器*/
 	/** Optional OrderComparator for dependency Lists and arrays */
 	@Nullable
 	private Comparator<Object> dependencyComparator;
 
+	/** 用于检查一个类定义是否有自动注入请求的解析器*/
 	/** Resolver to use for checking if a bean definition is an autowire candidate */
 	private AutowireCandidateResolver autowireCandidateResolver = new SimpleAutowireCandidateResolver();
 
+	/** 依赖类型到对应的注入值的映射*/
 	/** Map from dependency type to corresponding autowired value */
 	private final Map<Class<?>, Object> resolvableDependencies = new ConcurrentHashMap<>(16);
 
+	/** bean定义名字到bean定义数据实体的映射*/
 	/** Map of bean definition objects, keyed by bean name */
 	//存储注册信息的BeanDefinition
 	private final Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<>(256);
 
+	/** 依赖类型到对应bean名字的映射，包括单例和非单例*/
 	/** Map of singleton and non-singleton bean names, keyed by dependency type */
 	private final Map<Class<?>, String[]> allBeanNamesByType = new ConcurrentHashMap<>(64);
 
+	/** 依赖类型到对应bean名字的映射，仅包含单例*/
 	/** Map of singleton-only bean names, keyed by dependency type */
 	private final Map<Class<?>, String[]> singletonBeanNamesByType = new ConcurrentHashMap<>(64);
 
+	/** 所有bean定义的名字的集合，按注册次序*/
 	/** List of bean definition names, in registration order */
 	private volatile List<String> beanDefinitionNames = new ArrayList<>(256);
 
+	/** 手工注册的单例bean定义的名字的集合，按注册次序*/
 	/** List of names of manually registered singletons, in registration order */
 	private volatile Set<String> manualSingletonNames = new LinkedHashSet<>(16);
 
+	/** 缓存bean定义名字的数组*/
 	/** Cached array of bean definition names in case of frozen configuration */
 	@Nullable
 	private volatile String[] frozenBeanDefinitionNames;
 
+	/** 是否允许bean定义的元数据被缓存，以用于所有的bean*/
 	/** Whether bean definition metadata may be cached for all beans */
 	private volatile boolean configurationFrozen = false;
 
@@ -210,6 +226,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 
 
 	/**
+	 * 指定一个ID用于序列化操作，如有需要允许这个BeanFactory通过这个ID反序化为此BeanFactory对象
 	 * Specify an id for serialization purposes, allowing this BeanFactory to be
 	 * deserialized from this id back into the BeanFactory object, if needed.
 	 */
@@ -234,6 +251,8 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	}
 
 	/**
+	 * 设置该工厂是否被允许马上加载bean定义；即使是被标记为延迟加载的bean定义，如果有明确的要求，可以关闭这个标志以阻止延迟加载的类加载，
+	 * 尤其是by-type查找的时候总是忽略bean的这此定义，不解析类名，而是根据需要加载bean仅仅是完成一个类型检查
 	 * Set whether it should be allowed to override bean definitions by registering
 	 * a different definition with the same name, automatically replacing the former.
 	 * If not, an exception will be thrown. This also applies to overriding aliases.
@@ -296,6 +315,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	}
 
 	/**
+	 * 给这个工厂设置一个定制的自动注入请求解析器，以便当决定是否一个bean的定义可以考虑为自动注入请求时使用
 	 * Set a custom autowire candidate resolver for this BeanFactory to use
 	 * when deciding whether a bean definition should be considered as a
 	 * candidate for autowiring.

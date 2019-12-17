@@ -20,8 +20,10 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
+ * 一个的简单interface对象，这些对象是InputStream的源。
  * Simple interface for objects that are sources for an {@link InputStream}.
  *
+ * 这是Spring更广泛的Resource接口的基本接口
  * <p>This is the base interface for Spring's more extensive {@link Resource} interface.
  *
  * <p>For single-use streams, {@link InputStreamResource} can be used for any
