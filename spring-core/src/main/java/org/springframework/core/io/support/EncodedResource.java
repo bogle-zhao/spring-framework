@@ -29,9 +29,12 @@ import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
 /**
+ *
+ * 将Resource描述与特定编码组合用于从资源中读取的Holder
  * Holder that combines a {@link Resource} descriptor with a specific encoding
  * or {@code Charset} to be used for reading from the resource.
  *
+ * 用于支持使用特定编码读取内容的操作的参数，通常通过{@code java.io.Reader}。
  * <p>Used as an argument for operations that support reading content with
  * a specific encoding, typically via a {@code java.io.Reader}.
  *

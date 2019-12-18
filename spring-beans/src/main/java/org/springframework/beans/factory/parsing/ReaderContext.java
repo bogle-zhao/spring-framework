@@ -152,6 +152,7 @@ public class ReaderContext {
 	// Explicit parse events
 
 	/**
+	 * 激活默认值注册
 	 * Fire an defaults-registered event.
 	 */
 	public void fireDefaultsRegistered(DefaultsDefinition defaultsDefinition) {

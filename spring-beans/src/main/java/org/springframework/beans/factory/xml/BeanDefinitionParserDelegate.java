@@ -68,7 +68,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 
 /**
+ * 用于解析XML bean定义的有状态委托类
  * Stateful delegate class used to parse XML bean definitions.
+ * 它是主要的解析器和其他扩展的BeanDefinitionParsers or  BeanDefinitionDecorators来去使用
  * Intended for use by both the main parser and any extension
  * {@link BeanDefinitionParser BeanDefinitionParsers} or
  * {@link BeanDefinitionDecorator BeanDefinitionDecorators}.
@@ -297,6 +299,8 @@ public class BeanDefinitionParserDelegate {
 	}
 
 	/**
+	 * 初始化默认的lazy-init、autowire、依赖项检查设置、init-method、destroy-method 并将这些值进行merge。支持嵌套的“bean”元素用例，如果默认值没有在本地显式设置，则返回到给定的父元素。
+	 *
 	 * Initialize the default lazy-init, autowire, dependency check settings,
 	 * init-method, destroy-method and merge settings. Support nested 'beans'
 	 * element use cases by falling back to the given parent in case the
@@ -310,14 +314,18 @@ public class BeanDefinitionParserDelegate {
 	}
 
 	/**
+	 *
+	 * 使用默认的lazy-init、autowire、依赖项检查设置、init-method、destroy-method并merge配置，装配给给定的DocumentDefaultsDefinition实例
 	 * Populate the given DocumentDefaultsDefinition instance with the default lazy-init,
 	 * autowire, dependency check settings, init-method, destroy-method and merge settings.
+	 * 通过返回到<literal>parentDefaults</literal> 来支持嵌套的'beans'元素用例，以防默认值没有在本地显式设置。
 	 * Support nested 'beans' element use cases by falling back to <literal>parentDefaults</literal>
 	 * in case the defaults are not explicitly set locally.
-	 * @param defaults the defaults to populate
-	 * @param parentDefaults the parent BeanDefinitionParserDelegate (if any) defaults to fall back to
+	 * @param defaults the defaults to populate 要填充的默认值
+	 * @param parentDefaults the parent BeanDefinitionParserDelegate (if any) defaults to fall back to 父类BeanDefinitionParserDelegate(如果有的话)默认返回
 	 * @param root the root element of the current bean definition document (or nested beans element)
 	 */
+	// 设置beans节点的默认值信息
 	protected void populateDefaults(DocumentDefaultsDefinition defaults, @Nullable DocumentDefaultsDefinition parentDefaults, Element root) {
 		String lazyInit = root.getAttribute(DEFAULT_LAZY_INIT_ATTRIBUTE);
 		if (DEFAULT_VALUE.equals(lazyInit)) {

@@ -20,6 +20,7 @@ import org.springframework.beans.factory.parsing.DefaultsDefinition;
 import org.springframework.lang.Nullable;
 
 /**
+ * 描述了以下<beans/>定义的以下默认值
  * Simple JavaBean that holds the defaults specified at the {@code <beans>}
  * level in a standard Spring XML bean definition document:
  * {@code default-lazy-init}, {@code default-autowire}, etc.

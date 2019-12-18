@@ -253,6 +253,11 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	}
 
 	/**
+	 * 对EntityResolver的解释说明：
+	 *EntityResolver的作用是项目本身就可以提供一个如何寻找DTD声明的方法，由程序来实现寻找DTD声明的过程，比如将DTD文件放到
+	 * 项目某处，在实现时直接将此文档读取并返回给SAX。避免通过网络来寻找相应的声明。
+	 * 链接：https://www.jianshu.com/p/8cb426f3757c
+	 *
 	 * Return the EntityResolver to use, building a default resolver
 	 * if none specified.
 	 */
@@ -294,10 +299,11 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
 
 	/**
+	 * 从指定的XML文件加载bean definitions
 	 * Load bean definitions from the specified XML file.
 	 * @param resource the resource descriptor for the XML file
-	 * @return the number of bean definitions found
-	 * @throws BeanDefinitionStoreException in case of loading or parsing errors
+	 * @return the number of bean definitions found		找到的bean定义的数量
+	 * @throws BeanDefinitionStoreException in case of loading or parsing errors	在加载或解析错误的情况下
 	 */
 	//XmlBeanDefinitionReader加载资源的入口方法
 	@Override
@@ -308,11 +314,12 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	}
 
 	/**
+	 * 从指定的XML文件加载bean definitions。
 	 * Load bean definitions from the specified XML file.
-	 * @param encodedResource the resource descriptor for the XML file,
+	 * @param encodedResource the resource descriptor for the XML file,		XML文件的资源描述符，允许指定用于解析文件的编码
 	 * allowing to specify an encoding to use for parsing the file
-	 * @return the number of bean definitions found
-	 * @throws BeanDefinitionStoreException in case of loading or parsing errors
+	 * @return the number of bean definitions found		找到的bean定义的数量
+	 * @throws BeanDefinitionStoreException in case of loading or parsing errors		在加载或解析错误的情况下
 	 */
 	//这里是载入XML形式Bean定义资源文件方法
 	public int loadBeanDefinitions(EncodedResource encodedResource) throws BeanDefinitionStoreException {
@@ -385,6 +392,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
 
 	/**
+	 * 实际从指定的XML文件加载bean定义
 	 * Actually load bean definitions from the specified XML file.
 	 * @param inputSource the SAX InputSource to read from
 	 * @param resource the resource descriptor for the XML file
