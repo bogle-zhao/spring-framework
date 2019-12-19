@@ -286,6 +286,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			//缓存没有正在创建的单列模式bean
 			//缓存中已有创建的原型bean
 			//但是由于循环引用的问题导致实例化对象失败
+			// 如果我们已经在创建此bean实例，则失败
 			// Fail if we're already creating this bean instance:
 			// We're assumably within a circular reference.
 			//只有在单例情况才会尝试解决循环依赖，原型模式情况下，如果存在
