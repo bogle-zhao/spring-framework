@@ -141,35 +141,42 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	/** Custom PropertyEditors to apply to the beans of this factory */
 	private final Map<Class<?>, Class<? extends PropertyEditor>> customEditors = new HashMap<>(4);
 
+	//要使用的自定义TypeConverter，将覆盖默认的PropertyEditor机制
 	/** A custom TypeConverter to use, overriding the default PropertyEditor mechanism */
 	@Nullable
 	private TypeConverter typeConverter;
-
+	//解析字段属性注解的String值
 	/** String resolvers to apply e.g. to annotation attribute values */
 	private final List<StringValueResolver> embeddedValueResolvers = new CopyOnWriteArrayList<>();
 
+	//应用于createBean的BeanPostProcessors
 	/** BeanPostProcessors to apply in createBean */
 	private final List<BeanPostProcessor> beanPostProcessors = new CopyOnWriteArrayList<>();
 
+	//指示是否已注册任何InstantiationAwareBeanPostProcessors
 	/** Indicates whether any InstantiationAwareBeanPostProcessors have been registered */
 	private volatile boolean hasInstantiationAwareBeanPostProcessors;
-
+	//指示是否已注册任何DestructionAwareBeanPostProcessors
 	/** Indicates whether any DestructionAwareBeanPostProcessors have been registered */
 	private volatile boolean hasDestructionAwareBeanPostProcessors;
-
+	// scope 唯一标示字符串映射的Scope范围
 	/** Map from scope identifier String to corresponding Scope */
 	private final Map<String, Scope> scopes = new LinkedHashMap<>(8);
 
+	//与SecurityManager一起运行时使用的安全上下文
 	/** Security context used when running with a SecurityManager */
 	@Nullable
 	private SecurityContextProvider securityContextProvider;
 
+	//从bean名称映射到合并的RootBeanDefinition
 	/** Map from bean name to merged RootBeanDefinition */
 	private final Map<String, RootBeanDefinition> mergedBeanDefinitions = new ConcurrentHashMap<>(256);
 
+	//至少已创建一次的bean名称
 	/** Names of beans that have already been created at least once */
 	private final Set<String> alreadyCreated = Collections.newSetFromMap(new ConcurrentHashMap<>(256));
 
+	//当前正在创建的bean的名称
 	/** Names of beans that are currently in creation */
 	private final ThreadLocal<Object> prototypesCurrentlyInCreation =
 			new NamedThreadLocal<>("Prototype beans currently in creation");
