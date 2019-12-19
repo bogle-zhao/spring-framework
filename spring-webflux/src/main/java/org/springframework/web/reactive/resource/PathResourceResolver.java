@@ -33,11 +33,11 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
 
 /**
- * A simple {@code ResourceResolver} that tries to find a resource under the given
- * locations matching to the request path.
+ * 一个简单的{@code ResourceResolver}，它尝试在与请求路径匹配的给定位置下查找资源
+ * A simple {@code ResourceResolver} that tries to find a resource under the given locations matching to the request path.
  *
- * <p>This resolver does not delegate to the {@code ResourceResolverChain} and is
- * expected to be configured at the end in a chain of resolvers.
+ * 该解析器不会委托给{@code ResourceResolverChain}，并且应该在解析器链的最后进行配置。
+ * <p>This resolver does not delegate to the {@code ResourceResolverChain} and is expected to be configured at the end in a chain of resolvers.
  *
  * @author Rossen Stoyanchev
  * @since 5.0
