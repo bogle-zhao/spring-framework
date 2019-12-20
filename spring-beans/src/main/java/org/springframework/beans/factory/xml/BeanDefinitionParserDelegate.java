@@ -404,6 +404,8 @@ public class BeanDefinitionParserDelegate {
 
 
 	/**
+	 * 解析提供的{@code <bean>}元素，如果在解析过程中出现了错误，可能会返回null，
+	 * 错误会包给{@code ProblemReporter}对象
 	 * Parses the supplied {@code <bean>} element. May return {@code null}
 	 * if there were errors during parse. Errors are reported to the
 	 * {@link org.springframework.beans.factory.parsing.ProblemReporter}.
@@ -440,6 +442,7 @@ public class BeanDefinitionParserDelegate {
 		//如果<Bean>元素中没有配置id属性时，将别名中的第一个值赋值给beanName
 		if (!StringUtils.hasText(beanName) && !aliases.isEmpty()) {
 			beanName = aliases.remove(0);
+			//如果没有提供beanName时，使用第一个别名来代替beanName
 			if (logger.isDebugEnabled()) {
 				logger.debug("No XML 'id' specified - using '" + beanName +
 						"' as bean name and " + aliases + " as aliases");
@@ -497,8 +500,9 @@ public class BeanDefinitionParserDelegate {
 	}
 
 	/**
-	 * Validate that the specified bean name and aliases have not been used already
-	 * within the current level of beans element nesting.
+	 * 验证在当前bean元素及嵌套级别中的bean名称和别名并未被使用。
+	 * Validate that the specified bean name and aliases have not been used
+	 * already within the current level of beans element nesting.
 	 */
 	protected void checkNameUniqueness(String beanName, List<String> aliases, Element beanElement) {
 		String foundName = null;
@@ -518,6 +522,7 @@ public class BeanDefinitionParserDelegate {
 	}
 
 	/**
+	 * 解析bean定义本身，而不考虑bean名称或别名。如果解析过程中出现错误，可能会返回null
 	 * Parse the bean definition itself, without regard to name or aliases. May return
 	 * {@code null} if problems occurred during the parsing of the bean definition.
 	 */
@@ -1473,6 +1478,7 @@ public class BeanDefinitionParserDelegate {
 
 		BeanDefinitionHolder finalDefinition = definitionHolder;
 
+		//首先，基于自定义属性进行装饰。
 		// Decorate based on custom attributes first.
 		NamedNodeMap attributes = ele.getAttributes();
 		for (int i = 0; i < attributes.getLength(); i++) {
@@ -1480,6 +1486,7 @@ public class BeanDefinitionParserDelegate {
 			finalDefinition = decorateIfRequired(node, finalDefinition, containingBd);
 		}
 
+		//根据自定义嵌套元素的装饰。
 		// Decorate based on custom nested elements.
 		NodeList children = ele.getChildNodes();
 		for (int i = 0; i < children.getLength(); i++) {

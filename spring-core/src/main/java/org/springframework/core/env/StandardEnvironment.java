@@ -17,9 +17,13 @@
 package org.springframework.core.env;
 
 /**
+ * Environment 适用于“标准”（即非Web）应用程序的实现。
  * {@link Environment} implementation suitable for use in 'standard' (i.e. non-web)
  * applications.
  *
+ * 除了ConfigurableEnvironment诸如属性解析和与配置文件相关的操作之类的常规功能外，此实现还配置了两个默认属性源，将按以下顺序搜索它们：
+ * 1. system properties 系统属性
+ * 2. system environment variables 系统环境变量
  * <p>In addition to the usual functions of a {@link ConfigurableEnvironment} such as
  * property resolution and profile-related operations, this implementation configures two
  * default property sources, to be searched in the following order:
@@ -28,6 +32,11 @@ package org.springframework.core.env;
  * <li>{@linkplain AbstractEnvironment#getSystemEnvironment() system environment variables}
  * </ul>
  *
+ * 也就是说，如果键“ xyz”同时存在于JVM系统属性以及当前进程的环境变量集中，
+ * 则系统属性中的键“ xyz”的值将从对的调用返回environment.getProperty("xyz")。
+ * 默认情况下选择此顺序，因为系统属性是针对每个JVM的，而环境变量在给定系统上的许多JVM中可能是相同的。
+ * 通过赋予系统属性优先级，可以基于每个JVM覆盖环境变量。
+ *
  * That is, if the key "xyz" is present both in the JVM system properties as well as in
  * the set of environment variables for the current process, the value of key "xyz" from
  * system properties will return from a call to {@code environment.getProperty("xyz")}.
@@ -35,6 +44,10 @@ package org.springframework.core.env;
  * environment variables may be the same across many JVMs on a given system.  Giving
  * system properties precedence allows for overriding of environment variables on a
  * per-JVM basis.
+ *
+ * 这些默认属性来源可能会被删除，重新排序或替换。
+ * 并可以使用中提供的MutablePropertySources 实例添加其他属性源AbstractEnvironment.getPropertySources()。
+ * 有关ConfigurableEnvironment用法示例，请参见 Javadoc。
  *
  * <p>These default property sources may be removed, reordered, or replaced; and
  * additional property sources may be added using the {@link MutablePropertySources}

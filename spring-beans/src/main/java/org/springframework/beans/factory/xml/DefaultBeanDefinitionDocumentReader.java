@@ -225,6 +225,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 		else if (delegate.nodeNameEquals(ele, BEAN_ELEMENT)) {
 			processBeanDefinition(ele, delegate);
 		}
+		// 元素节点是<beans/>的节点
 		else if (delegate.nodeNameEquals(ele, NESTED_BEANS_ELEMENT)) {
 			// recurse
 			doRegisterBeanDefinitions(ele);
@@ -350,11 +351,12 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	}
 
 	/**
-	 * Process the given bean element, parsing the bean definition
-	 * and registering it with the registry.
+	 * 处理给定的bean元素，解析bean定义并将其注册到注册表中。
+	 * Process the given bean element, parsing the bean definition and registering it with the registry.
 	 */
 	//解析Bean定义资源Document对象的普通元素
 	protected void processBeanDefinition(Element ele, BeanDefinitionParserDelegate delegate) {
+		//BeanDefinitionHolder 里面持有了BeanDefinition的引用
 		BeanDefinitionHolder bdHolder = delegate.parseBeanDefinitionElement(ele);
 		//BeanDefinitionHolder是对BeanDefinition的封装，即Bean定义的封装类，对Document对象中<Bean>元素的解析由BeanDefinitionParserDelegate实现，
 		// BeanDefinitionHolder dbHolder = delegate.parseBeanDefinitionElement(ele);
