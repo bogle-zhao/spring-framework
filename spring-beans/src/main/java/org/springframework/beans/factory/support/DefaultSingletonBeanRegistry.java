@@ -362,7 +362,9 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	}
 
 	/**
+	 * 在单例创建之前回调。
 	 * Callback before singleton creation.
+	 * 默认实现将单例对象注册为当前正在创建的状态。即添加到singletonsCurrentlyInCreation中
 	 * <p>The default implementation register the singleton as currently in creation.
 	 * @param beanName the name of the singleton about to be created
 	 * @see #isSingletonCurrentlyInCreation

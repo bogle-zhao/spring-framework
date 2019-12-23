@@ -491,7 +491,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		try {
 			//如果Bean配置了初始化前和初始化后的处理器，则试图返回一个需要创建Bean的代理对象
-			// Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.
+			// Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.	给beanpostprocessor一个机会来返回代理而不是目标bean实例。
 			Object bean = resolveBeforeInstantiation(beanName, mbdToUse);
 			if (bean != null) {
 				return bean;
@@ -522,10 +522,12 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	}
 
 	/**
-	 * Actually create the specified bean. Pre-creation processing has already happened
-	 * at this point, e.g. checking {@code postProcessBeforeInstantiation} callbacks.
-	 * <p>Differentiates between default bean instantiation, use of a
-	 * factory method, and autowiring a constructor.
+	 * 实际创建指定的bean。
+	 * Actually create the specified bean.
+	 * 在这一点上，预创建处理已经发生了，例如检查{@code postProcessBeforeInstantiation}回调。
+	 * Pre-creation processing has already happened at this point, e.g. checking {@code postProcessBeforeInstantiation} callbacks.
+	 * 区分默认bean实例化、工厂方法的使用和构造函数的自动装配。
+	 * <p>Differentiates between default bean instantiation, use of a factory method, and autowiring a constructor.
 	 * @param beanName the name of the bean
 	 * @param mbd the merged bean definition for the bean
 	 * @param args explicit arguments to use for constructor or factory method invocation
@@ -1142,7 +1144,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		//使用容器的自动装配方法进行实例化
-		// Shortcut when re-creating the same bean...
+		// Shortcut when re-creating the same bean...	//重新创建相同的bean时的快捷方式…
 		boolean resolved = false;
 		boolean autowireNecessary = false;
 		if (args == null) {
@@ -1187,7 +1189,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 
 		//使用默认的无参构造方法实例化
-		// No special handling: simply use no-arg constructor.
+		// No special handling: simply use no-arg constructor.		不需要特殊处理:只需使用无参数构造函数。
 		return instantiateBean(beanName, mbd);
 	}
 

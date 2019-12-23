@@ -239,15 +239,16 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	}
 
 	/**
+	 * 返回指定bean的一个实例，该实例可以是共享的，也可以是独立的。
 	 * Return an instance, which may be shared or independent, of the specified bean.
-	 * @param name the name of the bean to retrieve
-	 * @param requiredType the required type of the bean to retrieve
-	 * @param args arguments to use when creating a bean instance using explicit arguments
-	 * (only applied when creating a new instance as opposed to retrieving an existing one)
+	 * @param name the name of the bean to retrieve		要检索的bean的名称
+	 * @param requiredType the required type of the bean to retrieve 	要检索的bean的所需类型
+	 * @param args arguments to use when creating a bean instance using explicit arguments		使用显式参数创建bean实例时要使用的参数
+	 * (only applied when creating a new instance as opposed to retrieving an existing one)		(仅在创建新实例时应用，而不是检索现有实例时)
 	 * @param typeCheckOnly whether the instance is obtained for a type check,
-	 * not for actual use
+	 * not for actual use	该实例用于类型检查，
 	 * @return an instance of the bean
-	 * @throws BeansException if the bean could not be created
+	 * @throws BeansException if the bean could not be created		如果不能创建bean
 	 */
 	//真正实现向IOC容器获取Bean的功能，也是触发依赖注入功能的地方
 	@SuppressWarnings("unchecked")
@@ -270,7 +271,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 		//先从缓存中获取是否已经有被创建过的单态类型的bean
 		//对于单列模式的bean整个IOC容器中只创建一次，不需要重复创建
-		// Eagerly check singleton cache for manually registered singletons.
+		// Eagerly check singleton cache for manually registered singletons.		急切地检查单例缓存中手动注册的单例对象。
 		Object sharedInstance = getSingleton(beanName);
 		if (sharedInstance != null && args == null) {
 			if (logger.isDebugEnabled()) {
@@ -305,7 +306,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			}
 
 			//对IOC容器中是否存在指定名称的BeanDefinition进行检查，首先检查是否能在当前的BeanFactory中获取所需的Bean，如果不能则委托当前容器的父容器去查找，如果还是找不到则沿着容器的继承体系向父容器查找
-			// Check if bean definition exists in this factory.
+			// Check if bean definition exists in this factory.		检查这个工厂中是否存在bean定义。
 			//如果 beanDefinitionMap 中也就是在所有已经加载的类中不包括 beanName 则尝试从parentBeanFactory中检测
 			BeanFactory parentBeanFactory = getParentBeanFactory();
 			if (parentBeanFactory != null && !containsBeanDefinition(beanName)) {
@@ -341,7 +342,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				checkMergedBeanDefinition(mbd, beanName, args);
 
 				//获取当前Bean所有依赖bean的名称
-				// Guarantee initialization of beans that the current bean depends on.
+				// Guarantee initialization of beans that the current bean depends on.	保证当前bean所依赖的bean的初始化。
 				String[] dependsOn = mbd.getDependsOn();
 				//如果当前Bean有依赖Bean
 				if (dependsOn != null) {
@@ -1617,9 +1618,9 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	}
 
 	/**
-	 * Mark the specified bean as already created (or about to be created).
+	 * Mark the specified bean as already created (or about to be created).	将指定的bean标记为已经创建(或即将创建)。
 	 * <p>This allows the bean factory to optimize its caching for repeated
-	 * creation of the specified bean.
+	 * creation of the specified bean.		这允许bean工厂对其缓存进行优化，以重复创建指定的bean。
 	 * @param beanName the name of the bean
 	 */
 	protected void markBeanAsCreated(String beanName) {
