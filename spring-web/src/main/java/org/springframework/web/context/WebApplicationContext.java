@@ -22,17 +22,27 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.lang.Nullable;
 
 /**
+ * 为web应用程序提供配置的接口。在应用程序运行时，这是只读的，但是如果实现支持这一点，则可以重新加载。
  * Interface to provide configuration for a web application. This is read-only while
  * the application is running, but may be reloaded if the implementation supports this.
  *
+ * 该接口将一个{@code getServletContext()}方法添加到通用的
+ * ApplicationContext接口，并定义了一个众所周知的应用程序属性名，
+ * 根上下文必须绑定到这个自引导过程中。
  * <p>This interface adds a {@code getServletContext()} method to the generic
  * ApplicationContext interface, and defines a well-known application attribute name
  * that the root context must be bound to in the bootstrap process.
  *
+ * 与通用应用程序上下文一样，web应用程序上下文也是分层的。
+ * 每个应用程序只有一个根上下文，而应用程序
+ * 中的每个servlet(包括MVC框架中的dispatcher servlet)都有自己的子上下文。
  * <p>Like generic application contexts, web application contexts are hierarchical.
  * There is a single root context per application, while each servlet in the application
  * (including a dispatcher servlet in the MVC framework) has its own child context.
  *
+ * 除了标准的应用程序上下文生命周期功能外，
+ * WebApplicationContext实现还需要检测{@link ServletContextAware}，
+ * 并相应地调用{@code setServletContext}方法。
  * <p>In addition to standard application context lifecycle capabilities,
  * WebApplicationContext implementations need to detect {@link ServletContextAware}
  * beans and invoke the {@code setServletContext} method accordingly.
@@ -98,6 +108,7 @@ public interface WebApplicationContext extends ApplicationContext {
 
 
 	/**
+	 * 返回此应用程序的标准Servlet API ServletContext。
 	 * Return the standard Servlet API ServletContext for this application.
 	 */
 	@Nullable
