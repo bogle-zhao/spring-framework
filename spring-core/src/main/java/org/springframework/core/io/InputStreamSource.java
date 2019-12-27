@@ -20,7 +20,10 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * 一个的简单interface对象，这些对象是InputStream的源。
+ *
+ * InputStreamSource封装任何能返回InputStream的类，
+ * 比如File、Classpath下的资源和Byte Array等。它只有一个方法定义：getInputStream()，该方法返回一个新的 InputStream对象。
+ *
  * Simple interface for objects that are sources for an {@link InputStream}.
  *
  * 这是Spring更广泛的Resource接口的基本接口

@@ -27,6 +27,7 @@ import java.nio.channels.ReadableByteChannel;
 import org.springframework.lang.Nullable;
 
 /**
+ * 资源描述符的接口，该描述符从基础资源的实际类型中抽象出来，例如文件或类路径资源。
  * Interface for a resource descriptor that abstracts from the actual
  * type of underlying resource, such as a file or class path resource.
  *
