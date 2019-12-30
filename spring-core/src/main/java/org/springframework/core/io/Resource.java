@@ -31,6 +31,7 @@ import org.springframework.lang.Nullable;
  * Interface for a resource descriptor that abstracts from the actual
  * type of underlying resource, such as a file or class path resource.
  *
+ * 如果InputStream以物理形式存在，则可以为每个资源打开InputStream，但是仅可以为某些资源返回URL或File句柄。实际行为是特定于实现的。
  * <p>An InputStream can be opened for every resource if it exists in
  * physical form, but a URL or File handle can just be returned for
  * certain resources. The actual behavior is implementation-specific.
@@ -53,6 +54,8 @@ import org.springframework.lang.Nullable;
 public interface Resource extends InputStreamSource {
 
 	/**
+	 * 确定此资源是否实际以物理形式存在。
+	 * 此方法执行确定的存在性检查，而{@code Resource}的有效确定是通过对应的handle来保证有效性
 	 * Determine whether this resource actually exists in physical form.
 	 * <p>This method performs a definitive existence check, whereas the
 	 * existence of a {@code Resource} handle only guarantees a valid
@@ -62,8 +65,10 @@ public interface Resource extends InputStreamSource {
 	boolean exists();
 
 	/**
+	 * 指示是否可以通过读取此资源的非空内容 InputStreamSource.getInputStream()。
 	 * Indicate whether the contents of this resource can be read via
 	 * {@link #getInputStream()}.
+	 * 返回true来描述代码资源可读，请注意，尝试进行实际的内容读取仍可能会失败。但是，值false表示无法读取资源内容。
 	 * <p>Will be {@code true} for typical resource descriptors;
 	 * note that actual content reading may still fail when attempted.
 	 * However, a value of {@code false} is a definitive indication
