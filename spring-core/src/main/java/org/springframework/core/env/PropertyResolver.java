@@ -19,6 +19,7 @@ package org.springframework.core.env;
 import org.springframework.lang.Nullable;
 
 /**
+ * 用于针对任何基础源解析属性的接口。
  * Interface for resolving properties against any underlying source.
  *
  * @author Chris Beams
