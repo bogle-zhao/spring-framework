@@ -27,6 +27,7 @@ import org.springframework.lang.Nullable;
  * constructor argument values, and further information supplied by
  * concrete implementations.
  *
+ * 这只是一个最小的接口：主要目的是允许诸如{@link PropertyPlaceholderConfigurer}之类的{@link BeanFactoryPostProcessor}自省和修改属性值以及其他bean元数据。
  * <p>This is just a minimal interface: The main intention is to allow a
  * {@link BeanFactoryPostProcessor} such as {@link PropertyPlaceholderConfigurer}
  * to introspect and modify property values and other bean metadata.

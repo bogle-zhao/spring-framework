@@ -24,6 +24,9 @@ import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
 /**
+ * 代表一对名称/值属性来源的抽象基类。底层的{@linkplain #getSource() 返回的对象}T可以是封装属性的任何类型。
+ * 示例包括{@link java.util.Properties}，{@link java.util.Map} {@code ServletContext} and {@code ServletConfig}（用于访问init参数）。
+ * 探索PropertySource类型层次结构以查看提供的实现。
  * Abstract base class representing a source of name/value property pairs. The underlying
  * {@linkplain #getSource() source object} may be of any type {@code T} that encapsulates
  * properties. Examples include {@link java.util.Properties} objects, {@link java.util.Map}
@@ -96,6 +99,7 @@ public abstract class PropertySource<T> {
 	}
 
 	/**
+	 * 返回{@code PropertySource}的底层source对象
 	 * Return the underlying source object for this {@code PropertySource}.
 	 */
 	//属性源（比如来自Map，那就是一个Map对象）
@@ -104,6 +108,7 @@ public abstract class PropertySource<T> {
 	}
 
 	/**
+	 * 返回是否包含给定名称的{@code PropertySource}
 	 * Return whether this {@code PropertySource} contains the given name.
 	 * <p>This implementation simply checks for a {@code null} return value
 	 * from {@link #getProperty(String)}. Subclasses may wish to implement
@@ -222,6 +227,7 @@ public abstract class PropertySource<T> {
 
 
 	/**
+	 * ComparisonPropertySource  继承 StubPropertySource    除构造函数为全部抛出异常，一般用来创建一个具名 PropertySource
 	 * @see PropertySource#named(String)
 	 */
 	static class ComparisonPropertySource extends StubPropertySource {
