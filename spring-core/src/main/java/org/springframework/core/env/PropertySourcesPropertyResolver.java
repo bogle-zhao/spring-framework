@@ -92,6 +92,9 @@ public class PropertySourcesPropertyResolver extends AbstractPropertyResolver {
 	@Nullable
 	protected <T> T getProperty(String key, Class<T> targetValueType, boolean resolveNestedPlaceholders) {
 		if (this.propertySources != null) {
+			// 遍历每个属性源，如果发现目标属性被某个属性源包含，则获取它的值并按要求做相应的处理然后返回处理
+			// 后的值从这里使用for循环的方式来看，可以将属性源看作是一个List，索引较小的属性源先被访问，也就
+			// 是说，索引较小的属性源具有较高优先级
 			for (PropertySource<?> propertySource : this.propertySources) {
 				if (logger.isTraceEnabled()) {
 					logger.trace("Searching for key '" + key + "' in PropertySource '" +
@@ -102,9 +105,11 @@ public class PropertySourcesPropertyResolver extends AbstractPropertyResolver {
 				if (value != null) {
 					//如果允许解析嵌入的${}，并且是String类型的就继续解析
 					if (resolveNestedPlaceholders && value instanceof String) {
+						// 解析值中的占位符
 						value = resolveNestedPlaceholders((String) value);
 					}
 					logKeyFound(key, propertySource, value);
+					// 根据要求做相应的类型转换然后返回转换后的值
 					return convertValueIfNecessary(value, targetValueType);
 				}
 			}
@@ -112,6 +117,7 @@ public class PropertySourcesPropertyResolver extends AbstractPropertyResolver {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Could not find key '" + key + "' in any property source");
 		}
+		// 任何属性源中都不包含该属性，返回null
 		return null;
 	}
 

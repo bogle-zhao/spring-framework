@@ -24,6 +24,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
 /**
+ * https://blog.csdn.net/andy_zhang2007/article/details/84452581
+ *
  * 代表一对名称/值属性来源的抽象基类。底层的{@linkplain #getSource() 返回的对象}T可以是封装属性的任何类型。
  * 示例包括{@link java.util.Properties}，{@link java.util.Map} {@code ServletContext} and {@code ServletConfig}（用于访问init参数）。
  * 探索PropertySource类型层次结构以查看提供的实现。
