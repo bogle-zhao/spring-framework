@@ -38,6 +38,24 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
+ *
+ * 概述
+ * DefaultSingletonBeanRegistry是Spring各种bean容器的基类。
+ * 是Spring单例bean注册表抽象建模接口SingletonBeanRegistry的缺省实现。具体来讲，DefaultSingletonBeanRegistry具备以下功能 :
+ *
+ * 	1. SingletonBeanRegistry接口约定的单例bean注册表功能；
+ * 	2. 继承自SimpleAliasRegistry,从而具备接口AliasRegistry定义的bean别名管理功能；
+ * 	3. 管理单例bean之间依赖关系(dependency)的功能;
+ * 	4. 管理单例bean之间包含关系(containment)的功能;
+ * 	5. 管理Disposable单例bean的功能；
+ * 	6. 标记/获取一个单例bean是否正处于创建过程中的功能；
+ * 	7. 销毁所管理的单例bean和各种关系的功能;
+ *
+ * ————————————————
+ * 原文链接：https://blog.csdn.net/andy_zhang2007/article/details/87032488
+ *
+ *
+ *
  * 共享bean实例的通用注册表，实现 {@link org.springframework.beans.factory.config.SingletonBeanRegistry}。
  * Generic registry for shared bean instances, implementing the
  * {@link org.springframework.beans.factory.config.SingletonBeanRegistry}.
@@ -78,20 +96,26 @@ import org.springframework.util.StringUtils;
 //对接口 SingletonBeanRegistry 各函数的实现
 public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements SingletonBeanRegistry {
 
+	//这里创建完成表示 : 对象创建，属性设置，依赖注入，初始化及初始化前置后置处理都已经完成
 	/** Cache of singleton objects: bean name --> bean instance */
-	// 用于保存BeanName和创建bean实例之间的关系，bean name --> bean instance。
+	// Map缓存已经创建完成的单例bean实例，bean name --> bean instance。
 	private final Map<String, Object> singletonObjects = new ConcurrentHashMap<>(256);
 
 	/** Cache of singleton factories: bean name --> ObjectFactory */
-	// 用于保存BeanName和创建 bean的工厂之间的关系，bean name -->ObjectFactory。
+	// Map缓存单例bean实例的创建工厂ObjectFactory，bean name -->ObjectFactory。
 	private final Map<String, ObjectFactory<?>> singletonFactories = new HashMap<>(16);
 
 	/** Cache of early singleton objects: bean name --> bean instance */
 	//也是保存 BeanName 和创建 bean 实例之间的关系，与singletonObjects的不同之处在于，当一个单例bean被放到这里面后，那么当bean还在创建过程中，就可以通过getBean方法获取到了，其目的是用来检测循环引用。
+	//Map缓存及早暴露的单例bean实例
+//	这里及早暴露的单例bean实例指的是那些创建尚未完成单例bean实例 :
+//		对象创建已经完成，
+//		属性设置/依赖注入尚未完成，初始化及初始化前置后置处理尚未开始
+//	该数据结构主要用于处理单例bean之间的循环依赖。
 	private final Map<String, Object> earlySingletonObjects = new HashMap<>(16);
 
 	/** Set of registered singletons, containing the bean names in registration order */
-	//用来保存当前所有已注册的bean。
+	//用来保存当前所有已注册的bean名称。
 	private final Set<String> registeredSingletons = new LinkedHashSet<>(256);
 
 	/** Names of beans that are currently in creation */
@@ -110,18 +134,41 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	private Set<Exception> suppressedExceptions;
 
 	/** Flag that indicates whether we're currently within destroySingletons */
-	// 标记当前是否正在进行destroy singletons 对象
+	// 当前是否处于销毁阶段标志
+//	指出目前我们是否处于正在销毁单例bean实例阶段，缺省值为 false
 	private boolean singletonsCurrentlyInDestruction = false;
 
 	/** Disposable bean instances: bean name --> disposable instance */
+//	Map缓存Disposable单例bean实例
+//	用于缓存那些实现了接口Disposable的单例bean实例
+//		key : bean 名称
+//		value : 实现了接口Disposable的单例bean实例
 	private final Map<String, Object> disposableBeans = new LinkedHashMap<>();
 
 	/** Map between containing bean names: bean name --> Set of bean names that the bean contains */
+//	缓存单例bean之间的包含关系
+//	缓存单例bean的从属方: Map
+//		key : 单例bean名称，表示包含关系中的包含者
+//		value : 被包含的那些单例bean的名称集合
 	private final Map<String, Set<String>> containedBeanMap = new ConcurrentHashMap<>(16);
 
 	/** Map between dependent bean names: bean name --> Set of dependent bean names */
+//	Map缓存单例bean之间的依赖关系
+//	Map缓存从属关系
+//	缓存单例bean的从属方: Map
+//		key : 单例bean名称，表示依赖关系中的被依赖方
+//		value : 从属于key对应单例bean的那些单例bean的名称集合
+//	这里缓存的从属方是直接从属方，如果两个bean之间存在间接从属关系，这种间接从属关系并不保存在该数据结构中，而是需要通过计算获得。
+//
+//	举例来讲，如果beanB的一个属性是beanA,则beanA是key被依赖方，beanB则是value依赖方(从属方)的一员。
 	private final Map<String, Set<String>> dependentBeanMap = new ConcurrentHashMap<>(64);
 
+//	Map缓存依赖关系
+//	缓存单例bean的依赖方: Map
+//		key : 单例bean名称，表示依赖关系中的从属方
+//		value : 被依赖的单例bean的名称的集合，是key对应的单例bean所依赖的那些单例bean的名称的集合。
+//	这里缓存的依赖方是直接依赖方，如果两个bean之间存在间接依赖关系，这种间接依赖关系并不保存在该数据结构中，而是需要通过计算获得。
+//	举例来讲，如果beanB的一个属性是beanA,则beanB是key从属方，beanA则是value被依赖方的一员。
 	/** Map between depending bean names: bean name --> Set of bean names for the bean's dependencies */
 	private final Map<String, Set<String>> dependenciesForBeanMap = new ConcurrentHashMap<>(64);
 
