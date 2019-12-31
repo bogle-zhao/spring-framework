@@ -25,10 +25,16 @@ import org.springframework.util.ObjectUtils;
 
 /**
  * https://blog.csdn.net/andy_zhang2007/article/details/84452581
+ * https://blog.csdn.net/andy_zhang2007/article/details/84302620
  *
- * 代表一对名称/值属性来源的抽象基类。底层的{@linkplain #getSource() 返回的对象}T可以是封装属性的任何类型。
- * 示例包括{@link java.util.Properties}，{@link java.util.Map} {@code ServletContext} and {@code ServletConfig}（用于访问init参数）。
- * 探索PropertySource类型层次结构以查看提供的实现。
+ * 对于各种基于"名称/值"对(key/value pair)的属性源,Spring将其抽象成了抽象泛型类PropertySource<T>。
+ * 底层的属性源T可以是容纳属性信息的任意类型，比如java.util.Properties,java.util.Map,ServletContext,ServletConfig对象,
+ * 或者是命令行参数CommandLineArgs对象。类PropertySource的方法getSource()用于获取底层的属性源对象T。
+ * 顶层的属性源对象经过PropertySource封装，从而具有统一的访问方式。
+ * ————————————————
+ * 原文链接：https://blog.csdn.net/andy_zhang2007/article/details/84302620
+ *
+ * 抽象基类，用于表示一个名称/值属性对的来源，简称为属性源。底层的属性源对象的类型通过泛型类T指定。
  * Abstract base class representing a source of name/value property pairs. The underlying
  * {@linkplain #getSource() source object} may be of any type {@code T} that encapsulates
  * properties. Examples include {@link java.util.Properties} objects, {@link java.util.Map}
@@ -36,10 +42,17 @@ import org.springframework.util.ObjectUtils;
  * parameters). Explore the {@code PropertySource} type hierarchy to see provided
  * implementations.
  *
+ * PropertySource 对象通常并不孤立使用，而是将多个PropertySource对象封装成一个PropertySources
+ * 对象来使用。另外还会有一个PropertyResolver属性解析器工作在PropertySources对象上，基于特定的优先级，
+ * 来访问这些属性源对象中的属性。
+ *
  * <p>{@code PropertySource} objects are not typically used in isolation, but rather
  * through a {@link PropertySources} object, which aggregates property sources and in
  * conjunction with a {@link PropertyResolver} implementation that can perform
  * precedence-based searches across the set of {@code PropertySources}.
+ *
+ * PropertySource有一个唯一标识id，这个唯一标识id不是基于所封装的属性内容，而是基于指定给
+ * 这个PropertySource对象的名称属性#getName()。
  *
  * <p>{@code PropertySource} identity is determined not based on the content of
  * encapsulated properties, but rather based on the {@link #getName() name} of the

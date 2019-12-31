@@ -64,6 +64,7 @@ public abstract class EnumerablePropertySource<T> extends PropertySource<T> {
 	}
 
 	/**
+	 * 返回{@linkplain #getSource() source}包含的所有属性的名称
 	 * Return the names of all properties contained by the
 	 * {@linkplain #getSource() source} object (never {@code null}).
 	 */
