@@ -397,22 +397,34 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	}
 
 
+//	标记/获取一个单例bean是否需要被创建检查排除掉
+//	标记一个单例bean是否需要被创建检查排除掉
 	public void setCurrentlyInCreation(String beanName, boolean inCreation) {
+//		inCreation 表示正在创建中
 		Assert.notNull(beanName, "Bean name must not be null");
 		if (!inCreation) {
+			// !inCreation 表示不在创建中 => 需要被创建检查排除掉
 			this.inCreationCheckExclusions.add(beanName);
 		}
 		else {
+			// inCreation 表示正在创建中 => 创建检查需要检查该bean
 			this.inCreationCheckExclusions.remove(beanName);
 		}
 	}
 
+//	获取一个单例bean是否需要被创建检查排除掉
+// 检测某个bean当前是否正在被创建
 	public boolean isCurrentlyInCreation(String beanName) {
 		Assert.notNull(beanName, "Bean name must not be null");
+		// inCreationCheckExclusions不包含指定bean 并且
+		// 指定bean真正在创建过程中， 则认为它当前正在被创建
 		return (!this.inCreationCheckExclusions.contains(beanName) && isActuallyInCreation(beanName));
 	}
 
+	// 检测指定bean是否在真正的创建过程中
 	protected boolean isActuallyInCreation(String beanName) {
+		// 如果singletonsCurrentlyInCreation包含beanName，说明
+		// 指定bean在真正的创建过程中
 		return isSingletonCurrentlyInCreation(beanName);
 	}
 
@@ -455,6 +467,12 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 
 	/**
 	 * 将给定的bean添加到此注册表中的disposable bean列表中
+	 *
+	 * 注册DisposableBean到指定的bean名称。DisposableBean通常和所注册的单例bean实例对应，
+	 * 使用同样的bean名称，但可能是不同的实例。比如某个单例bean实例对应的可能是一个DisposableBean适配器，
+	 * 该适配器并不实现Spring接口DisposableBean。
+	 * ————————————————
+	 * 原文链接：https://blog.csdn.net/andy_zhang2007/article/details/87032488
 	 * Add the given bean to the list of disposable beans in this registry.
 	 * <p>Disposable beans usually correspond to registered singletons,
 	 * matching the bean name but potentially being a different instance
@@ -490,14 +508,19 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	}
 
 	/**
+	 * 单例bean依赖关系管理功能
+	 *
 	 * Register a dependent bean for the given bean,
 	 * to be destroyed before the given bean is destroyed.
 	 * @param beanName the name of the bean
 	 * @param dependentBeanName the name of the dependent bean
 	 */
 	public void registerDependentBean(String beanName, String dependentBeanName) {
+		// 标准化被依赖方bean名称
 		String canonicalName = canonicalName(beanName);
 
+		// 将被依赖方dependentBeanName添加为依赖方beanName的一个从属 :
+		// 1. 从被依赖方的角度处理：添加一个从属
 		synchronized (this.dependentBeanMap) {
 			Set<String> dependentBeans =
 					this.dependentBeanMap.computeIfAbsent(canonicalName, k -> new LinkedHashSet<>(8));
@@ -526,6 +549,8 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 		}
 	}
 
+	//从属关系判断
+//	这里包含直接从属关系和间接从属关系的判断。
 	private boolean isDependent(String beanName, String dependentBeanName, @Nullable Set<String> alreadySeen) {
 		if (alreadySeen != null && alreadySeen.contains(beanName)) {
 			return false;
@@ -551,6 +576,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	}
 
 	/**
+	 * 判断某个单例是否被依赖
 	 * Determine whether a dependent bean has been registered for the given name.
 	 * @param beanName the name of the bean to check
 	 */
@@ -559,6 +585,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	}
 
 	/**
+	 * 返回bean依赖的所有bean信息
 	 * Return the names of all beans which depend on the specified bean, if any.
 	 * @param beanName the name of the bean
 	 * @return the array of dependent bean names, or an empty array if none
@@ -589,6 +616,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 		}
 	}
 
+//	销毁所有单例bean及其之间的关系
 	public void destroySingletons() {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Destroying singletons in " + this);
@@ -705,6 +733,12 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	}
 
 	/**
+	 * 获取单例注册表互斥量
+	 *
+	 * 该方法暴露一个单例注册表的操作互斥量给子类和外部调用者协调操作单例注册表。
+	 * 子类如果在单例实例创建过程中有任何扩展逻辑，要操作单例注册表时应该同步该互斥量。
+	 * 尤其需要注意的是，子类在一个单例创建时不应该再使用其它自己的互斥量以免延迟初始化时发生死锁。
+	 *
 	 * Exposes the singleton mutex to subclasses and external collaborators.
 	 * <p>Subclasses should synchronize on the given Object if they perform
 	 * any sort of extended singleton creation phase. In particular, subclasses
