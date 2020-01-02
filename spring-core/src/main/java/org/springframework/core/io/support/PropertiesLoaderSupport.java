@@ -215,6 +215,7 @@ public abstract class PropertiesLoaderSupport {
 				try {
 					// 使用指定的字符集fileEncoding从外部资源路径location读取属性到props,使用的属性读取工具
 					// 是 propertiesPersister
+					//xml 格式的propertieswenj格式参考applicationProperties.xml
 					PropertiesLoaderUtils.fillProperties(
 							props, new EncodedResource(location, this.fileEncoding), this.propertiesPersister);
 				}
