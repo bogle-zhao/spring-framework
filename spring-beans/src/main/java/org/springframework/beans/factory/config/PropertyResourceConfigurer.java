@@ -28,6 +28,20 @@ import org.springframework.core.io.support.PropertiesLoaderSupport;
 import org.springframework.util.ObjectUtils;
 
 /**
+ * Spring PropertyResourceConfigurer是一个抽象基类，继承自PropertiesLoaderSupport，
+ * 并实现了接口BeanFactoryPostProcessor。
+ * 它抽象了容器BeanFactory后置处理阶段对容器中所有bean定义中的属性进行配置的一般逻辑，
+ * 属性配置所使用的属性来源是基类PropertiesLoaderSupport方法所规定的那些属性。
+ *
+ * PropertyResourceConfigurer有两个实现子类:
+ *
+ * 		1.PropertyOverrideConfigurer
+ * 			用于处理"beanName.property=value"这种风格的属性值覆盖，将属性对象中的属性"推送(push)"到bean定义中
+ * 		2.PropertyPlaceholderConfigurer
+ * 			用于处理bean定义中"${name}"这样的占位符解析,从属性对象中"拉取(pull)"到bean定义的属性值中
+ * ————————————————
+ * 原文链接：https://blog.csdn.net/andy_zhang2007/article/details/86756564
+ *
  * Allows for configuration of individual bean property values from a property resource,
  * i.e. a properties file. Useful for custom config files targeted at system
  * administrators that override bean properties configured in the application context.
