@@ -99,7 +99,11 @@ public abstract class PropertyResourceConfigurer extends PropertiesLoaderSupport
 	 * 2.convertProperties(mergedProps)
 	 * 		该方法由PropertyResourceConfigurer自身提供缺省实现，用于对属性值做必要的转换处理，缺省不做任何处理；
 	 * 3.processProperties(beanFactory, mergedProps)
-	 * 		该方法由PropertyResourceConfigurer定义为抽象方法，所以需要由实现子类为其提供具体实现。不过其目的很明确，是对容器中每个bean定义中的属性进行处理。但具体处理是什么，就要看实现子类自身的设计目的了。比如实现子类PropertyOverrideConfigurer和实现子类PropertyPlaceholderConfigurer就分别有自己的bean定义属性处理逻辑。
+	 * 		该方法由PropertyResourceConfigurer定义为抽象方法，
+	 * 		所以需要由实现子类为其提供具体实现。不过其目的很明确，
+	 * 		是对容器中每个bean定义中的属性进行处理。但具体处理是什么，
+	 * 		就要看实现子类自身的设计目的了。
+	 * 		比如实现子类PropertyOverrideConfigurer和实现子类PropertyPlaceholderConfigurer就分别有自己的bean定义属性处理逻辑。
 	 *
 	 * ————————————————
 	 * 原文链接：https://blog.csdn.net/andy_zhang2007/article/details/86756564
