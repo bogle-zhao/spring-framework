@@ -39,6 +39,14 @@ import org.springframework.util.ObjectUtils;
  * 			用于处理"beanName.property=value"这种风格的属性值覆盖，将属性对象中的属性"推送(push)"到bean定义中
  * 		2.PropertyPlaceholderConfigurer
  * 			用于处理bean定义中"${name}"这样的占位符解析,从属性对象中"拉取(pull)"到bean定义的属性值中
+ *
+ *
+ * 	总结：
+ * 	PropertyResourceConfigurer自身主要是抽象了对容器中所有bean定义的属性进行处理的一般逻辑，
+ * 	实现在接口BeanFactoryPostProcessor所定义的方法postProcessBeanFactory中，这样容器启动时，
+ * 	bean容器的后置处理阶段，所有bean定义的属性都会被当前PropertyResourceConfigurer进行处理，
+ * 	处理时所使用的属性来源自当前PropertyResourceConfigurer基类PropertiesLoaderSupport所约定的那些属性，
+ * 	至于做什么样的处理，由当前PropertyResourceConfigurer的具体实现子类自己提供实现。
  * ————————————————
  * 原文链接：https://blog.csdn.net/andy_zhang2007/article/details/86756564
  *
@@ -84,6 +92,18 @@ public abstract class PropertyResourceConfigurer extends PropertiesLoaderSupport
 
 
 	/**
+	 * 方法postProcessBeanFactory使用到了三个方法 :
+	 *
+	 * 1.mergeProperties()
+	 * 		该方法由基类PropertiesLoaderSupport提供缺省实现,用于合并本地属性和外来属性为一个Properties对象;
+	 * 2.convertProperties(mergedProps)
+	 * 		该方法由PropertyResourceConfigurer自身提供缺省实现，用于对属性值做必要的转换处理，缺省不做任何处理；
+	 * 3.processProperties(beanFactory, mergedProps)
+	 * 		该方法由PropertyResourceConfigurer定义为抽象方法，所以需要由实现子类为其提供具体实现。不过其目的很明确，是对容器中每个bean定义中的属性进行处理。但具体处理是什么，就要看实现子类自身的设计目的了。比如实现子类PropertyOverrideConfigurer和实现子类PropertyPlaceholderConfigurer就分别有自己的bean定义属性处理逻辑。
+	 *
+	 * ————————————————
+	 * 原文链接：https://blog.csdn.net/andy_zhang2007/article/details/86756564
+	 *
 	 * {@linkplain #mergeProperties Merge}, {@linkplain #convertProperties convert} and
 	 * {@linkplain #processProperties process} properties against the given bean factory.
 	 * @throws BeanInitializationException if any properties cannot be loaded
@@ -91,11 +111,14 @@ public abstract class PropertyResourceConfigurer extends PropertiesLoaderSupport
 	@Override
 	public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
 		try {
+			// 合并本地属性和外部指定的属性文件资源中的属性
 			Properties mergedProps = mergeProperties();
 
+			// 将属性的值做转换(仅在必要的时候做)
 			// Convert the merged properties, if necessary.
 			convertProperties(mergedProps);
 
+			// 对容器中的每个bean定义进行处理，也就是替换每个bean定义中的属性中的占位符
 			// Let the subclass process the properties.
 			processProperties(beanFactory, mergedProps);
 		}
@@ -112,6 +135,7 @@ public abstract class PropertyResourceConfigurer extends PropertiesLoaderSupport
 	 * @param props the Properties to convert
 	 * @see #processProperties
 	 */
+	// 对指定属性对象中的属性值进行必要的转换
 	protected void convertProperties(Properties props) {
 		Enumeration<?> propertyNames = props.propertyNames();
 		while (propertyNames.hasMoreElements()) {
@@ -133,6 +157,7 @@ public abstract class PropertyResourceConfigurer extends PropertiesLoaderSupport
 	 * @return the converted value, to be used for processing
 	 * @see #convertPropertyValue(String)
 	 */
+	// 对指定名称的属性的属性值进行必要的转换
 	protected String convertProperty(String propertyName, String propertyValue) {
 		return convertPropertyValue(propertyValue);
 	}
@@ -151,6 +176,7 @@ public abstract class PropertyResourceConfigurer extends PropertiesLoaderSupport
 	 * @see #setLocation
 	 * @see #convertProperty(String, String)
 	 */
+	// 对属性值的必要转换，这是一个缺省实现，不做任何转换直接返回原值，实现类可以覆盖该方法
 	protected String convertPropertyValue(String originalValue) {
 		return originalValue;
 	}
@@ -162,6 +188,7 @@ public abstract class PropertyResourceConfigurer extends PropertiesLoaderSupport
 	 * @param props the Properties to apply
 	 * @throws org.springframework.beans.BeansException in case of errors
 	 */
+//	这是一个抽象方法定义，约定对容器beanFactory中所有的bean定义进行属性处理，属性值解析来源是mergedProps,实现子类必须对该方法提供实现。
 	protected abstract void processProperties(ConfigurableListableBeanFactory beanFactory, Properties props)
 			throws BeansException;
 

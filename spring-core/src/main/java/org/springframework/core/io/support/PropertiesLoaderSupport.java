@@ -31,6 +31,24 @@ import org.springframework.util.DefaultPropertiesPersister;
 import org.springframework.util.PropertiesPersister;
 
 /**
+ * Spring PropertiesLoaderSupport是一个抽象基类，它抽象了从不同渠道加载属性的通用逻辑，
+ * 以及这些属性应用优先级上的一些考虑。它所提供的这些功能主要供实现子类使用。Spring框架中，
+ * PropertiesLoaderSupport的实现子类有PropertiesFactoryBean,PropertyResourceConfigurer等。
+ *
+ * 首先，它将属性分成两类：本地属性(也叫缺省属性)和外来属性。这里本地属性指的是直接以Properties对象形式设置进来的属性。
+ * 外来属性指的是通过外部资源形式设置进来需要加载的那些属性。
+ *
+ * 然后，对于本地属性和外来属性之间的的使用优先级，PropertiesLoaderSupport通过属性localOverride来标识。
+ * 如果localOverride为false,表示外部属性优先级高，这也是缺省设置。如果localOverride为true,表示本地属性优先级高。
+ *
+ * 另外，PropertiesLoaderSupport还有一个属性fileEncoding用来表示从属性文件加载属性时使用的字符集。
+ *
+ * 总结：
+ * PropertiesLoaderSupport所实现的功能并不多，主要是设置要使用的本地属性和外部属性文件资源路径，
+ * 最终通过mergeProperties方法将这些属性合并成一个Properties对象，本地属性和外部属性之间的优先级关系由属性localOverride决定。
+ * ————————————————
+ * 原文链接：https://blog.csdn.net/andy_zhang2007/article/details/86749301
+ *
  * Base class for JavaBean-style components that need to load properties
  * from one or more resources. Supports local properties as well, with
  * configurable overriding.
@@ -43,19 +61,29 @@ public abstract class PropertiesLoaderSupport {
 	/** Logger available to subclasses */
 	protected final Log logger = LogFactory.getLog(getClass());
 
+	// 本地属性，通过设置Properties对象直接设置进来的属性
 	@Nullable
 	protected Properties[] localProperties;
 
+	// 本地属性和外来属性之间的优先级，或者叫做覆盖关系
+	// false 表示 外来属性优先级高于本地属性  (缺省值)
+	// true 表示 本地属性优先级高于外来属性
 	protected boolean localOverride = false;
 
+	// 外来属性对应资源，通过设置外部资源位置设置进来需要加载的属性
 	@Nullable
 	private Resource[] locations;
 
+	// 读取外来属性时遇到不存在的资源路径应该怎么办 ?
+	// false : 输出一个日志，然后继续执行其他逻辑 (缺省值)
+	// true : 抛出异常
 	private boolean ignoreResourceNotFound = false;
 
+	// 加载外来属性资源文件时使用的字符集
 	@Nullable
 	private String fileEncoding;
 
+	// 外来属性加载工具
 	private PropertiesPersister propertiesPersister = new DefaultPropertiesPersister();
 
 
@@ -143,22 +171,26 @@ public abstract class PropertiesLoaderSupport {
 	 * Return a merged Properties instance containing both the
 	 * loaded properties and properties set on this FactoryBean.
 	 */
+//	合并本地属性和外来属性然后返回一个Properties对象，这里面考虑了属性 localOverride 的应用。
 	protected Properties mergeProperties() throws IOException {
 		Properties result = new Properties();
 
 		if (this.localOverride) {
-			// Load properties from file upfront, to let local properties override.
+			// Load properties from file upfront, to let local properties override.	从文件预先加载属性，以使本地属性被覆盖。
+			// localOverride == true, 先加载外来属性到结果对象
 			loadProperties(result);
 		}
 
 		if (this.localProperties != null) {
+			// 将本地属性合并到结果对象
 			for (Properties localProp : this.localProperties) {
 				CollectionUtils.mergePropertiesIntoMap(localProp, result);
 			}
 		}
 
 		if (!this.localOverride) {
-			// Load properties from file afterwards, to let those properties override.
+			// Load properties from file afterwards, to let those properties override.	之后从文件加载属性，以使这些属性被覆盖。
+			// localOverride == false, 后加载外来属性到结果对象
 			loadProperties(result);
 		}
 
@@ -166,22 +198,29 @@ public abstract class PropertiesLoaderSupport {
 	}
 
 	/**
+	 * 将属性加载到给定实例中。
 	 * Load properties into the given instance.
 	 * @param props the Properties instance to load into
 	 * @throws IOException in case of I/O errors
 	 * @see #setLocations
 	 */
+//	外部属性的加载方法。
 	protected void loadProperties(Properties props) throws IOException {
 		if (this.locations != null) {
+			// 读取每一个属性文件资源
 			for (Resource location : this.locations) {
 				if (logger.isDebugEnabled()) {
 					logger.debug("Loading properties file from " + location);
 				}
 				try {
+					// 使用指定的字符集fileEncoding从外部资源路径location读取属性到props,使用的属性读取工具
+					// 是 propertiesPersister
 					PropertiesLoaderUtils.fillProperties(
 							props, new EncodedResource(location, this.fileEncoding), this.propertiesPersister);
 				}
 				catch (FileNotFoundException | UnknownHostException ex) {
+					// 出现异常时，如果ignoreResourceNotFound==true,则仅仅记录日志，继续读取下一个
+					// 资源文件，否则直接抛出该异常
 					if (this.ignoreResourceNotFound) {
 						if (logger.isInfoEnabled()) {
 							logger.info("Properties resource not found: " + ex.getMessage());
