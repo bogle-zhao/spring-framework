@@ -221,6 +221,8 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 		}
 	}
 
+//	获取指定名称的单例bean实例：允许创建及早暴露实例
+//	此方法主要供使用者获取已经外部注册进来的单例bean,或者已经通过getSingleton(String beanName, ObjectFactory<?> singletonFactory)创建的单例bean。
 	@Override
 	@Nullable
 	public Object getSingleton(String beanName) {
@@ -245,6 +247,15 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 		//检查缓存中是否存在实例
 		Object singletonObject = this.singletonObjects.get(beanName);
 		if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
+
+			// 如果没有找到，并且指定名称的bean正在创建过程中,则
+			// 1. 如果对应单例bean对象已经存在于earlySingletonObjects则直接返回
+			// 2. 如果对应单例bean对象不存在于earlySingletonObjects,并且允许
+			//    创建及早暴露引用，也就是allowEarlyReference == true,则尝试
+			//    获取该bean对应的对象创建工厂ObjectFactory创建相应的单例bean
+			//    对象并记录到earlySingletonObjects，同时也从singletonFactories
+			//    移除相应的对象创建工厂ObjectFactory(因为对象已经创建)。
+
 			//如果为空，则锁定全局变量并进行处理
 			synchronized (this.singletonObjects) {
 				//如果此bean正在加载则不处理
