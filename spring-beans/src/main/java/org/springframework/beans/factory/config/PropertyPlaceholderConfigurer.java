@@ -28,6 +28,8 @@ import org.springframework.util.PropertyPlaceholderHelper.PlaceholderResolver;
 import org.springframework.util.StringValueResolver;
 
 /**
+ * https://blog.csdn.net/andy_zhang2007/article/details/92805173
+ *
  * {@link PlaceholderConfigurerSupport} subclass that resolves ${...} placeholders
  * against {@link #setLocation local} {@link #setProperties properties} and/or system properties
  * and environment variables.

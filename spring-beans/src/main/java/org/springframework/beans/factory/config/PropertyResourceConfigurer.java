@@ -40,6 +40,20 @@ import org.springframework.util.ObjectUtils;
  * 		2.PropertyPlaceholderConfigurer
  * 			用于处理bean定义中"${name}"这样的占位符解析,从属性对象中"拉取(pull)"到bean定义的属性值中
  *
+ * 区别描述PropertyOverrideConfigurer和PropertyPlaceholderConfigurer
+ *
+ * PropertyPlaceholderConfigurer
+ * 		功能 : 解析和处理bean定义中属性值,构造函数参数值,和@Value注解中的占位符${...}
+ * 		属性源 : 所设置的Properties属性对象,属性文件,系统属性(system properties)，环境变量(environment variables)
+ * 		工作模式 : “拉”，遍历每个bean定义中的属性占位符，从属性源中拉取对应的属性值替换属性占位符
+ * 		注意：从Spring 3.1 开始，推荐使用PropertySourcesPlaceholderConfigurer而不是PropertyPlaceholderConfigurer。
+ *
+ * PropertyOverrideConfigurer
+ * 		功能 : 基于属性文件定义的bean属性值设置指令执行相应的bean属性值设置
+ * 		属性源 : 指定路径的属性文件
+ * 		工作模式: “推”,根据属性文件中的bean属性设置指令将属性值推送设置到相应的bean属性
+ * ————————————————
+ * 原文链接：https://blog.csdn.net/andy_zhang2007/article/details/92805173
  *
  * 	总结：
  * 	PropertyResourceConfigurer自身主要是抽象了对容器中所有bean定义的属性进行处理的一般逻辑，
