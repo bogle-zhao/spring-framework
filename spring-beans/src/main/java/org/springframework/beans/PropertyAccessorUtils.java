@@ -40,9 +40,10 @@ public abstract class PropertyAccessorUtils {
 	}
 
 	/**
+	 * 检查给定的属性路径是指示索引属性还是嵌套属性。
 	 * Check whether the given property path indicates an indexed or nested property.
 	 * @param propertyPath the property path to check
-	 * @return whether the path indicates an indexed or nested property
+	 * @return whether the path indicates an indexed or nested property		路径是指示索引属性还是嵌套属性
 	 */
 	public static boolean isNestedOrIndexedProperty(@Nullable String propertyPath) {
 		if (propertyPath == null) {

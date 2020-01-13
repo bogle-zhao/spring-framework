@@ -22,6 +22,11 @@ import org.springframework.lang.Nullable;
  * {@link PropertyResolver} implementation that resolves property values against
  * an underlying set of {@link PropertySources}.
  *
+ * 一个PropertyResolver实现类，用于解析一个PropertySources对象中的属性源集合中的属性。
+ *
+ * 这里PropertySourcesPropertyResolver继承自基类AbstractPropertyResolver，
+ * AbstractPropertyResolver提供了很多方法实现，不过这里不做过多解析，而仅仅关注
+ * 如何获取一个属性的值的逻辑。
  * @author Chris Beams
  * @author Juergen Hoeller
  * @since 3.1
@@ -31,6 +36,7 @@ import org.springframework.lang.Nullable;
  */
 public class PropertySourcesPropertyResolver extends AbstractPropertyResolver {
 
+	// PropertySources形式存在的属性源集合，该工具的工作对象
 	@Nullable
 	private final PropertySources propertySources;
 
@@ -44,6 +50,9 @@ public class PropertySourcesPropertyResolver extends AbstractPropertyResolver {
 	}
 
 
+	// 查看是否包含某个指定名称的属性，判断方法：
+	// 1. 底层任何一个属性源包含该属性的话就认为是包含；
+	// 2. 否则认为是不包含。
 	@Override
 	public boolean containsProperty(String key) {
 		if (this.propertySources != null) {
@@ -56,18 +65,23 @@ public class PropertySourcesPropertyResolver extends AbstractPropertyResolver {
 		return false;
 	}
 
+	// 获取某个指定名称的属性的值，如果该属性不被包含的话，返回null
+	// 不管该属性的值是什么类型，将它转换成字符串类型
 	@Override
 	@Nullable
 	public String getProperty(String key) {
 		return getProperty(key, String.class, true);
 	}
 
+	// 获取某个指定名称的属性的值，并将其转换成指定的类型，如果该属性不被包含的话，返回null
 	@Override
 	@Nullable
 	public <T> T getProperty(String key, Class<T> targetValueType) {
 		return getProperty(key, targetValueType, true);
 	}
 
+	// 获取某个指定名称的属性的值，如果该属性不被包含的话，返回null
+	// 不管该属性的值是什么类型，将它转换成字符串类型
 	@Override
 	@Nullable
 	protected String getPropertyAsRawString(String key) {
@@ -78,6 +92,9 @@ public class PropertySourcesPropertyResolver extends AbstractPropertyResolver {
 	@Nullable
 	protected <T> T getProperty(String key, Class<T> targetValueType, boolean resolveNestedPlaceholders) {
 		if (this.propertySources != null) {
+			// 遍历每个属性源，如果发现目标属性被某个属性源包含，则获取它的值并按要求做相应的处理然后返回处理
+			// 后的值从这里使用for循环的方式来看，可以将属性源看作是一个List，索引较小的属性源先被访问，也就
+			// 是说，索引较小的属性源具有较高优先级
 			for (PropertySource<?> propertySource : this.propertySources) {
 				if (logger.isTraceEnabled()) {
 					logger.trace("Searching for key '" + key + "' in PropertySource '" +
@@ -88,9 +105,11 @@ public class PropertySourcesPropertyResolver extends AbstractPropertyResolver {
 				if (value != null) {
 					//如果允许解析嵌入的${}，并且是String类型的就继续解析
 					if (resolveNestedPlaceholders && value instanceof String) {
+						// 解析值中的占位符
 						value = resolveNestedPlaceholders((String) value);
 					}
 					logKeyFound(key, propertySource, value);
+					// 根据要求做相应的类型转换然后返回转换后的值
 					return convertValueIfNecessary(value, targetValueType);
 				}
 			}
@@ -98,6 +117,7 @@ public class PropertySourcesPropertyResolver extends AbstractPropertyResolver {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Could not find key '" + key + "' in any property source");
 		}
+		// 任何属性源中都不包含该属性，返回null
 		return null;
 	}
 

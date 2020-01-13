@@ -30,6 +30,8 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringValueResolver;
 
 /**
+ * https://www.jianshu.com/p/0481113592d2
+ *
  * Visitor class for traversing {@link BeanDefinition} objects, in particular
  * the property values and constructor argument values contained in them,
  * resolving bean metadata values.

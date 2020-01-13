@@ -20,6 +20,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.lang.Nullable;
 
 /**
+ *
+ * 简单策略接口，允许工具控制source元数据关联到bean definition元数据。
  * Simple strategy allowing tools to control how source metadata is attached
  * to the bean definition metadata.
  *

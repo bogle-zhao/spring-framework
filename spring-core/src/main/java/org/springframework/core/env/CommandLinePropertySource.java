@@ -234,6 +234,7 @@ public abstract class CommandLinePropertySource<T> extends EnumerablePropertySou
 
 
 	/**
+	 * 指定特殊的“非选项参数”属性的名称。
 	 * Specify the name of the special "non-option arguments" property.
 	 * The default is {@value #DEFAULT_NON_OPTION_ARGS_PROPERTY_NAME}.
 	 */
@@ -288,8 +289,8 @@ public abstract class CommandLinePropertySource<T> extends EnumerablePropertySou
 
 
 	/**
-	 * Return whether the set of option arguments parsed from the command line contains
-	 * an option with the given name.
+	 * 返回从命令行解析的选项参数集是否包含具有给定名称的选项。
+	 * Return whether the set of option arguments parsed from the command line contains an option with the given name.
 	 */
 	protected abstract boolean containsOption(String name);
 
@@ -311,6 +312,7 @@ public abstract class CommandLinePropertySource<T> extends EnumerablePropertySou
 	protected abstract List<String> getOptionValues(String name);
 
 	/**
+	 * 返回从命令行解析的非选项参数的集合。
 	 * Return the collection of non-option arguments parsed from the command line.
 	 * Never {@code null}.
 	 */

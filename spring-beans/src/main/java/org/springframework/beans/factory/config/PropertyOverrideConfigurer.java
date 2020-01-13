@@ -27,6 +27,12 @@ import org.springframework.beans.PropertyValue;
 import org.springframework.beans.factory.BeanInitializationException;
 
 /**
+ * 用于处理"beanName.property=value"这种风格的属性值覆盖，将属性对象中的属性"推送(push)"到bean定义中
+ * beanName必须是容器中的beanName
+ * https://blog.csdn.net/andy_zhang2007/article/details/86756564
+ * https://blog.csdn.net/andy_zhang2007/article/details/92805173
+ *
+ *
  * Property resource configurer that overrides bean property values in an application
  * context definition. It <i>pushes</i> values from a properties file into bean definitions.
  *

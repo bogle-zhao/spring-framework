@@ -178,6 +178,7 @@ public abstract class ObjectUtils {
 	}
 
 	/**
+	 * 检查给定数组是否包含给定元素。
 	 * Check whether the given array contains the given element.
 	 * @param array the array to check (may be {@code null},
 	 * in which case the return value will always be {@code false})

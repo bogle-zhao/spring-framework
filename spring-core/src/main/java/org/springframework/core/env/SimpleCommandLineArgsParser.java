@@ -17,6 +17,8 @@
 package org.springframework.core.env;
 
 /**
+ * Spring的一个命令行参数列表分析工具，它的目的就是将原始的命令行参数列表分析处理后保存为一个CommandLineArgs对象。
+ *
  * Parses a {@code String[]} of command line arguments in order to populate a
  * {@link CommandLineArgs} object.
  *
