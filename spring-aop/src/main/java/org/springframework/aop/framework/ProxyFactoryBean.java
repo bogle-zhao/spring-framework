@@ -124,10 +124,10 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 	@Nullable
 	private transient BeanFactory beanFactory;
 
-	/** Whether the advisor chain has already been initialized */
+	/** Whether the advisor chain has already been initialized  是否已初始化拦截器链*/
 	private boolean advisorChainInitialized = false;
 
-	/** If this is a singleton, the cached singleton proxy instance */
+	/** If this is a singleton, the cached singleton proxy instance 如果这是一个单例，则缓存的单例代理实例*/
 	@Nullable
 	private Object singletonInstance;
 
@@ -240,6 +240,9 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 
 
 	/**
+	 * 返回一个代理proxy。当客户端从该FactoryBean中获取bean时调用这个方法。
+	 * 创建要由这个工厂返回的AOP代理的实例
+	 * 实例将被缓存为单例，并在每次调用代理的 {@code getObject()}时创建。
 	 * Return a proxy. Invoked when clients obtain beans from this factory bean.
 	 * Create an instance of the AOP proxy to be returned by this factory.
 	 * The instance will be cached for a singleton, and create on each call to
@@ -310,22 +313,26 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 	}
 
 	/**
+	 * 返回此类的代理对象的单例实例，
+	 * 如果尚未创建，则延迟创建它。
 	 * Return the singleton instance of this class's proxy object,
 	 * lazily creating it if it hasn't been created already.
-	 * @return the shared singleton proxy
+	 * @return the shared singleton proxy 返回共享的代理对象
 	 */
 	private synchronized Object getSingletonInstance() {
 		if (this.singletonInstance == null) {
 			this.targetSource = freshTargetSource();
 			if (this.autodetectInterfaces && getProxiedInterfaces().length == 0 && !isProxyTargetClass()) {
+				//依靠AOP基础设施告诉我们代理的接口是什么。
 				// Rely on AOP infrastructure to tell us what interfaces to proxy.
 				Class<?> targetClass = getTargetClass();
 				if (targetClass == null) {
 					throw new FactoryBeanNotInitializedException("Cannot determine target class for proxy");
 				}
+				//定义好代理类要实现的那些接口
 				setInterfaces(ClassUtils.getAllInterfacesForClass(targetClass, this.proxyClassLoader));
 			}
-			// Initialize the shared singleton instance.
+			// Initialize the shared singleton instance. 初始化共享单例实例。
 			super.setFrozen(this.freezeProxy);
 			this.singletonInstance = getProxy(createAopProxy());
 		}
@@ -425,13 +432,17 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 	}
 
 	/**
-	 * Create the advisor (interceptor) chain. Advisors that are sourced
-	 * from a BeanFactory will be refreshed each time a new prototype instance
+	 * 创建advisor (interceptor) 链。
+	 * 每次添加一个新prototype实例时，将刷新来自bean factory的链表。
+	 * 通过工厂API 以编程方式添加的拦截器不受这些更改的影响。
+	 * Create the advisor (interceptor) chain. advisors that are sourced
+	 * from a beanfactory will be refreshed each time a new prototype instance
 	 * is added. Interceptors added programmatically through the factory API
 	 * are unaffected by such changes.
 	 */
+	//将advisor逐个的添加到集合中，在调用目标对象方法时，从这个集合中获取advisor中的advice，根据pointcut逐个调用
 	private synchronized void initializeAdvisorChain() throws AopConfigException, BeansException {
-		if (this.advisorChainInitialized) {
+		if (this.advisorChainInitialized) { //是否初始化过
 			return;
 		}
 
@@ -447,7 +458,7 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 				throw new AopConfigException("Target required after globals");
 			}
 
-			// Materialize interceptor chain from bean names.
+			// Materialize interceptor chain from bean names. 从bean名构成拦截器链。
 			for (String name : this.interceptorNames) {
 				if (logger.isTraceEnabled()) {
 					logger.trace("Configuring advisor or advice '" + name + "'");
@@ -463,16 +474,16 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 				}
 
 				else {
-					// If we get here, we need to add a named interceptor.
-					// We must check if it's a singleton or prototype.
+					// If we get here, we need to add a named interceptor. 如果我们到达这里，我们需要添加一个命名的拦截器。
+					// We must check if it's a singleton or prototype. 我们必须检查它是单例还是原型。
 					Object advice;
 					if (this.singleton || this.beanFactory.isSingleton(name)) {
-						// Add the real Advisor/Advice to the chain.
+						// Add the real Advisor/Advice to the chain. 将真正的advisor/advice添加到链中。
 						advice = this.beanFactory.getBean(name);
 					}
 					else {
-						// It's a prototype Advice or Advisor: replace with a prototype.
-						// Avoid unnecessary creation of prototype bean just for advisor chain initialization.
+						// It's a prototype Advice or Advisor: replace with a prototype. 这是一个Advice or Advisor:用prototype替换。
+						// Avoid unnecessary creation of prototype bean just for advisor chain initialization. 避免仅为advisor chain初始化而不必要地创建prototype bean。
 						advice = new PrototypePlaceholderAdvisor(name);
 					}
 					addAdvisorOnChainCreation(advice, name);
@@ -546,8 +557,11 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 	}
 
 	/**
+	 * 在创建advice chain时调用。
 	 * Invoked when advice chain is created.
+	 * 将给定的advice, advisor or object添加到拦截器列表。
 	 * <p>Add the given advice, advisor or object to the interceptor list.
+	 * 由于这三种可能性，我们不能更加具体化，强制指定具体类型
 	 * Because of these three possibilities, we can't type the signature
 	 * more strongly.
 	 * @param next advice, advisor or target object
@@ -555,9 +569,9 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 	 * bean factory
 	 */
 	private void addAdvisorOnChainCreation(Object next, String name) {
-		// We need to convert to an Advisor if necessary so that our source reference
-		// matches what we find from superclass interceptors.
-		Advisor advisor = namedBeanToAdvisor(next);
+		// 如果有必要，我们需要转换为Advisor，以便我们的源引用与我们从超类拦截器中找到的内容匹配。
+		// We need to convert to an Advisor if necessary so that our source reference matches what we find from superclass interceptors.
+		Advisor advisor = namedBeanToAdvisor(next); //转化成Advisor
 		if (logger.isTraceEnabled()) {
 			logger.trace("Adding advisor with name '" + name + "'");
 		}
@@ -565,6 +579,11 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 	}
 
 	/**
+	 * 返回创建代理时要使用的TargetSource。
+	 * 如果没有在interceptorNames列表的末尾指定目标，
+	 * 则TargetSource将是此类的TargetSource成员。
+	 * 否则，我们将获取目标bean，并在必要时将其包装在TargetSource中
+	 *
 	 * Return a TargetSource to use when creating a proxy. If the target was not
 	 * specified at the end of the interceptorNames list, the TargetSource will be
 	 * this class's TargetSource member. Otherwise, we get the target bean and wrap

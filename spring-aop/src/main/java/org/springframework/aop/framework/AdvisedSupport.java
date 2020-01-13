@@ -190,6 +190,7 @@ public class AdvisedSupport extends ProxyConfig implements Advised {
 
 
 	/**
+	 * 设置被代理的接口
 	 * Set the interfaces to be proxied.
 	 */
 	public void setInterfaces(Class<?>... interfaces) {

@@ -41,6 +41,7 @@ package org.springframework.aop.framework;
  * @author Rod Johnson
  * @author Juergen Hoeller
  */
+//创建AopProxy
 public interface AopProxyFactory {
 
 	/**

@@ -69,6 +69,7 @@ public class ProxyCreatorSupport extends AdvisedSupport {
 	}
 
 	/**
+	 * 返回该ProxyConfig使用的AopProxyFactory。
 	 * Return the AopProxyFactory that this ProxyConfig uses.
 	 */
 	public AopProxyFactory getAopProxyFactory() {
@@ -95,6 +96,7 @@ public class ProxyCreatorSupport extends AdvisedSupport {
 
 
 	/**
+	 * 子类应调用此方法以获得新的AOP代理。 他们不应使用{@code this}作为参数来创建AOP代理。
 	 * Subclasses should call this to get a new AOP proxy. They should <b>not</b>
 	 * create an AOP proxy with {@code this} as an argument.
 	 */
