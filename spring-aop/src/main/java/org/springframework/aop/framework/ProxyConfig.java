@@ -69,10 +69,16 @@ public class ProxyConfig implements Serializable {
 	}
 
 	/**
+	 * 设置是否进行代理优化，代理之间“积极优化”的确切含义会有所不同，但通常会有一些权衡。默认值为“ false”。
 	 * Set whether proxies should perform aggressive optimizations.
 	 * The exact meaning of "aggressive optimizations" will differ
 	 * between proxies, but there is usually some tradeoff.
 	 * Default is "false".
+	 *
+	 * 例如，优化通常意味着在创建代理后建议更改将不会生效。
+	 * 因此，默认情况下禁用优化。如果其他设置无法进行优化，
+	 * 则可以忽略优化值“ true”：例如，如果“ exposeProxy”设置为“ true”，
+	 * 并且与优化不兼容。
 	 * <p>For example, optimization will usually mean that advice changes won't
 	 * take effect after a proxy has been created. For this reason, optimization
 	 * is disabled by default. An optimize value of "true" may be ignored
