@@ -30,6 +30,8 @@ import org.springframework.lang.Nullable;
 public interface AdvisorChainFactory {
 
 	/**
+	 * methodCache是一个集合Map<MethodCacheKey, List<Object>>,对方法的拦截器链进行缓存，如果不在缓存中，则生成并添加。这里使用DefaultAdvisorChainFactory来生成拦截器链
+	 *
 	 * Determine a list of {@link org.aopalliance.intercept.MethodInterceptor} objects
 	 * for the given advisor chain configuration.
 	 * @param config the AOP configuration in the form of an Advised object

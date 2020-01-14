@@ -148,6 +148,8 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 
 
 	/**
+	 * 实现InvocationHandler.invoke。
+	 * 调用者将确切地看到目标抛出的异常，除非钩子方法抛出异常。
 	 * Implementation of {@code InvocationHandler.invoke}.
 	 * <p>Callers will see exactly the exception thrown by the target,
 	 * unless a hook method throws an exception.
@@ -165,10 +167,12 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 		try {
 			if (!this.equalsDefined && AopUtils.isEqualsMethod(method)) {
 				// The target does not implement the equals(Object) method itself.
+				// 目标没有实现自己的equals方法
 				return equals(args[0]);
 			}
 			else if (!this.hashCodeDefined && AopUtils.isHashCodeMethod(method)) {
 				// The target does not implement the hashCode() method itself.
+				// 目标没有实现自己的hashCodes方法
 				return hashCode();
 			}
 			else if (method.getDeclaringClass() == DecoratingProxy.class) {
@@ -178,6 +182,7 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 			else if (!this.advised.opaque && method.getDeclaringClass().isInterface() &&
 					method.getDeclaringClass().isAssignableFrom(Advised.class)) {
 				// Service invocations on ProxyConfig with the proxy config...
+				// 根据代理对象的配置调用服务，如果是Advised接口的实现类，则直接调用
 				return AopUtils.invokeJoinpointUsingReflection(this.advised, method, args);
 			}
 
@@ -191,15 +196,19 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 
 			// Get as late as possible to minimize the time we "own" the target,
 			// in case it comes from a pool.
+			// 有可能为null.尽可能减少拥有目标对象的时间，在这种情况下对象来自于对象池
 			target = targetSource.getTarget();
 			Class<?> targetClass = (target != null ? target.getClass() : null);
 
 			// Get the interception chain for this method.
+			// 获得这个方法的拦截器链
 			List<Object> chain = this.advised.getInterceptorsAndDynamicInterceptionAdvice(method, targetClass);
 
 			// Check whether we have any advice. If we don't, we can fallback on direct
 			// reflective invocation of the target, and avoid creating a MethodInvocation.
+			//如果没有拦截器链，则直接调用目标对象
 			if (chain.isEmpty()) {
+				// 我们可以忽略创建MethodInvocation：直接去调用目标
 				// We can skip creating a MethodInvocation: just invoke the target directly
 				// Note that the final invoker must be an InvokerInterceptor so we know it does
 				// nothing but a reflective operation on the target, and no hot swapping or fancy proxying.
@@ -208,8 +217,10 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 			}
 			else {
 				// We need to create a method invocation...
+				// 构造一个方法调用
 				invocation = new ReflectiveMethodInvocation(proxy, target, method, args, targetClass, chain);
 				// Proceed to the joinpoint through the interceptor chain.
+				// 调用连接点的拦截器链(见3)
 				retVal = invocation.proceed();
 			}
 
@@ -232,10 +243,12 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 		finally {
 			if (target != null && !targetSource.isStatic()) {
 				// Must have come from TargetSource.
+				// 必须来自TargetSource.
 				targetSource.releaseTarget(target);
 			}
 			if (setProxyContext) {
 				// Restore old proxy.
+				// 重新保存旧的代理
 				AopContext.setCurrentProxy(oldProxy);
 			}
 		}

@@ -31,6 +31,7 @@ import org.springframework.core.BridgeMethodResolver;
 import org.springframework.lang.Nullable;
 
 /**
+ * Spring 本身对AOP联盟的一个实现
  * Spring's implementation of the AOP Alliance
  * {@link org.aopalliance.intercept.MethodInvocation} interface,
  * implementing the extended

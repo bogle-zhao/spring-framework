@@ -35,6 +35,8 @@ import org.springframework.aop.support.MethodMatchers;
 import org.springframework.lang.Nullable;
 
 /**
+ * https://www.jianshu.com/p/30dcd2e25868
+ *
  * A simple but definitive way of working out an advice chain for a Method,
  * given an {@link Advised} object. Always rebuilds each advice chain;
  * caching can be provided by subclasses.
@@ -53,8 +55,11 @@ public class DefaultAdvisorChainFactory implements AdvisorChainFactory, Serializ
 
 		// This is somewhat tricky... We have to process introductions first,
 		// but we need to preserve order in the ultimate list.
+		//通过config获得配置好的advisor链，AdvisedSupport实现了Advised
 		List<Object> interceptorList = new ArrayList<Object>(config.getAdvisors().length);
+		//实际对象
 		Class<?> actualClass = (targetClass != null ? targetClass : method.getDeclaringClass());
+		//判断是否符合配置要求
 		boolean hasIntroductions = hasMatchingIntroductions(config, actualClass);
 		AdvisorAdapterRegistry registry = GlobalAdvisorAdapterRegistry.getInstance();
 
@@ -62,6 +67,7 @@ public class DefaultAdvisorChainFactory implements AdvisorChainFactory, Serializ
 			if (advisor instanceof PointcutAdvisor) {
 				// Add it conditionally.
 				PointcutAdvisor pointcutAdvisor = (PointcutAdvisor) advisor;
+				//判断通知器是否匹配实际对象
 				if (config.isPreFiltered() || pointcutAdvisor.getPointcut().getClassFilter().matches(actualClass)) {
 					MethodMatcher mm = pointcutAdvisor.getPointcut().getMethodMatcher();
 					if (MethodMatchers.matches(mm, method, actualClass, hasIntroductions)) {
@@ -70,6 +76,7 @@ public class DefaultAdvisorChainFactory implements AdvisorChainFactory, Serializ
 							// Creating a new object instance in the getInterceptors() method
 							// isn't a problem as we normally cache created chains.
 							for (MethodInterceptor interceptor : interceptors) {
+								//封装成动态方法匹配
 								interceptorList.add(new InterceptorAndDynamicMethodMatcher(interceptor, mm));
 							}
 						}
