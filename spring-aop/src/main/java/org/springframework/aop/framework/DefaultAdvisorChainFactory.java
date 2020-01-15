@@ -54,7 +54,7 @@ public class DefaultAdvisorChainFactory implements AdvisorChainFactory, Serializ
 			Advised config, Method method, @Nullable Class<?> targetClass) {
 
 		// This is somewhat tricky... We have to process introductions first,
-		// but we need to preserve order in the ultimate list.
+		// but we need to preserve order in the ultimate list. 我们首先处理introductions通知，我们需要在最终的列表中将顺序保存起来
 		//通过config获得配置好的advisor链，AdvisedSupport实现了Advised
 		List<Object> interceptorList = new ArrayList<Object>(config.getAdvisors().length);
 		//实际对象

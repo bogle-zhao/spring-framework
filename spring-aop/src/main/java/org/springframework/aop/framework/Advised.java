@@ -109,6 +109,7 @@ public interface Advised extends TargetClassAware {
 	boolean isPreFiltered();
 
 	/**
+	 * 返回要应用到这个方法的advisor
 	 * Return the advisors applying to this proxy.
 	 * @return a list of Advisors applying to this proxy (never {@code null})
 	 */
