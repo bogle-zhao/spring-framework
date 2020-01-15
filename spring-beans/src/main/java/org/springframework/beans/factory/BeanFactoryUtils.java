@@ -30,6 +30,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
+ * 在bean工厂上（尤其是在ListableBeanFactory接口上）操作的便捷方法。
+ *
  * Convenience methods operating on bean factories, in particular
  * on the {@link ListableBeanFactory} interface.
  *
@@ -46,6 +48,7 @@ import org.springframework.util.StringUtils;
 public abstract class BeanFactoryUtils {
 
 	/**
+	 * 生成的Bean名称的分隔符。
 	 * Separator for generated bean names. If a class name or parent name is not
 	 * unique, "#1", "#2" etc will be appended, until the name becomes unique.
 	 */
@@ -64,6 +67,7 @@ public abstract class BeanFactoryUtils {
 	}
 
 	/**
+	 * 返回实际的bean名称，删除工厂取消引用前缀（如果有的话，还删除重复的工厂前缀（如果找到））。
 	 * Return the actual bean name, stripping out the factory dereference
 	 * prefix (if any, also stripping repeated factory prefixes if found).
 	 * @param name the name of the bean
@@ -80,9 +84,10 @@ public abstract class BeanFactoryUtils {
 	}
 
 	/**
+	 * 返回给定名称是否是默认命名策略（包含“＃...”部分）生成的Bean名
 	 * Return whether the given name is a bean name which has been generated
 	 * by the default naming strategy (containing a "#..." part).
-	 * @param name the name of the bean
+	 * @param name the name of the bean bean的名称
 	 * @return whether the given name is a generated bean name
 	 * @see #GENERATED_BEAN_NAME_SEPARATOR
 	 * @see org.springframework.beans.factory.support.BeanDefinitionReaderUtils#generateBeanName
@@ -109,8 +114,10 @@ public abstract class BeanFactoryUtils {
 	// Retrieval of bean names
 
 	/**
+	 * 返回bean数量，包括层次结构的父bean
 	 * Count all beans in any hierarchy in which this factory participates.
 	 * Includes counts of ancestor bean factories.
+	 * 重复的bean名称只记一次
 	 * <p>Beans that are "overridden" (specified in a descendant factory
 	 * with the same name) are only counted once.
 	 * @param lbf the bean factory
@@ -122,6 +129,7 @@ public abstract class BeanFactoryUtils {
 	}
 
 	/**
+	 * 返回工厂中的所有bean名称，包括祖先（父容器）工厂。
 	 * Return all bean names in the factory, including ancestor factories.
 	 * @param lbf the bean factory
 	 * @return the array of matching bean names, or an empty array if none
@@ -132,11 +140,17 @@ public abstract class BeanFactoryUtils {
 	}
 
 	/**
+	 * 获取给定类型的所有bean名称，包括祖先工厂中定义的名称。万一被覆盖的bean定义将返回唯一的名称。
 	 * Get all bean names for the given type, including those defined in ancestor
 	 * factories. Will return unique names in case of overridden bean definitions.
+	 *
+	 * 是否考虑由FactoryBeans创建的对象，这意味着将初始化FactoryBeans。
+	 * 如果由FactoryBean创建的对象不匹配，则原始FactoryBean本身将与该类型匹配。
 	 * <p>Does consider objects created by FactoryBeans, which means that FactoryBeans
 	 * will get initialized. If the object created by the FactoryBean doesn't match,
 	 * the raw FactoryBean itself will be matched against the type.
+	 *
+	 * 此版本的beanNamesForTypeIncludingAncestors自动包含原型和FactoryBeans。
 	 * <p>This version of {@code beanNamesForTypeIncludingAncestors} automatically
 	 * includes prototypes and FactoryBeans.
 	 * @param lbf the bean factory
@@ -160,6 +174,8 @@ public abstract class BeanFactoryUtils {
 	}
 
 	/**
+	 * 获取给定类型的所有bean名称，包括祖先工厂中定义的名称。万一被覆盖的bean定义将返回唯一的名称。
+	 *
 	 * Get all bean names for the given type, including those defined in ancestor
 	 * factories. Will return unique names in case of overridden bean definitions.
 	 * <p>Does consider objects created by FactoryBeans, which means that FactoryBeans
@@ -187,6 +203,12 @@ public abstract class BeanFactoryUtils {
 	}
 
 	/**
+	 * 获取给定类型的所有bean名称，包括祖先工厂中定义的名称。万一被覆盖的bean定义将返回唯一的名称。
+	 *如果设置了“ allowEagerInit”标志，是否考虑了FactoryBeans创建的对象，
+	 * 这意味着将初始化FactoryBeans。如果由FactoryBean创建的对象不匹配，
+	 * 则原始FactoryBean本身将与该类型匹配。如果未设置“ allowEagerInit”，
+	 * 则仅检查原始FactoryBean（不需要初始化每个FactoryBean）。
+	 *
 	 * Get all bean names for the given type, including those defined in ancestor
 	 * factories. Will return unique names in case of overridden bean definitions.
 	 * <p>Does consider objects created by FactoryBeans if the "allowEagerInit"
@@ -224,6 +246,7 @@ public abstract class BeanFactoryUtils {
 	}
 
 	/**
+	 * 获取所有Class具有提供Annotation 类型的Bean名称，包括在祖先工厂中定义的名称，而无需创建任何Bean实例。万一被覆盖的bean定义将返回唯一的名称。
 	 * Get all bean names whose {@code Class} has the supplied {@link Annotation}
 	 * type, including those defined in ancestor factories, without creating any bean
 	 * instances yet. Will return unique names in case of overridden bean definitions.
@@ -253,6 +276,11 @@ public abstract class BeanFactoryUtils {
 	// Retrieval of bean instances
 
 	/**
+	 * 获取给定类型的所有bean名称，包括祖先工厂中定义的名称。万一被覆盖的bean定义将返回唯一的名称。
+	 *
+	 * 是否考虑由FactoryBeans创建的对象，这意味着将初始化FactoryBeans。如果由FactoryBean创建的对象不匹配，则原始FactoryBean本身将与该类型匹配。
+	 *
+	 * 此版本的beanNamesForTypeIncludingAncestors自动包含原型和FactoryBeans。
 	 * Return all beans of the given type or subtypes, also picking up beans defined in
 	 * ancestor bean factories if the current bean factory is a HierarchicalBeanFactory.
 	 * The returned Map will only contain beans of this type.

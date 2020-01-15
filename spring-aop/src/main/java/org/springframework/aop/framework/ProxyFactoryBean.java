@@ -259,7 +259,7 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 	/**
 	 * 返回一个代理proxy。当客户端从该FactoryBean中获取bean时调用这个方法。
 	 * 创建要由这个工厂返回的AOP代理的实例
-	 * 实例将被缓存为单例，并在每次调用代理的 {@code getObject()}时创建。
+	 * 实例将被缓存为单例，或者每次调用代理的 {@code getObject()}时创建。
 	 * Return a proxy. Invoked when clients obtain beans from this factory bean.
 	 * Create an instance of the AOP proxy to be returned by this factory.
 	 * The instance will be cached for a singleton, and create on each call to
@@ -450,7 +450,7 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 
 	/**
 	 * 创建advisor (interceptor) 链。
-	 * 每次添加一个新prototype实例时，将刷新来自bean factory的链表。
+	 * 每次构建一个新prototype实例时，将刷新来自bean factory的链表。
 	 * 通过工厂API 以编程方式添加的拦截器不受这些更改的影响。
 	 * Create the advisor (interceptor) chain. advisors that are sourced
 	 * from a beanfactory will be refreshed each time a new prototype instance
@@ -463,26 +463,31 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 			return;
 		}
 
+		//如果ProxyFactoryBean中配置的连接器列名名称不为空
 		if (!ObjectUtils.isEmpty(this.interceptorNames)) {
+			//如果没有Bean工厂(容器)
 			if (this.beanFactory == null) {
 				throw new IllegalStateException("No BeanFactory available anymore (probably due to serialization) " +
 						"- cannot resolve interceptor names " + Arrays.asList(this.interceptorNames));
 			}
 
-			// Globals can't be last unless we specified a targetSource using the property...
+			// Globals can't be last unless we specified a targetSource using the property... 全局通知器不能是通知器链中最后一个，除非显式使用属性指定了目标
 			if (this.interceptorNames[this.interceptorNames.length - 1].endsWith(GLOBAL_SUFFIX) &&
 					this.targetName == null && this.targetSource == EMPTY_TARGET_SOURCE) {
 				throw new AopConfigException("Target required after globals");
 			}
 
 			// Materialize interceptor chain from bean names. 从bean名构成拦截器链。
+			//遍历通知器链，向容器添加通知器
 			for (String name : this.interceptorNames) {
 				if (logger.isTraceEnabled()) {
 					logger.trace("Configuring advisor or advice '" + name + "'");
 				}
 
+				//如果通知器是全局的
 				if (name.endsWith(GLOBAL_SUFFIX)) {
 					if (!(this.beanFactory instanceof ListableBeanFactory)) {
+						//只能对ListableBeanFactory使用全局advisors or interceptors
 						throw new AopConfigException(
 								"Can only use global advisors or interceptors with a ListableBeanFactory");
 					}
