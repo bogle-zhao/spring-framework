@@ -51,8 +51,12 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.ObjectUtils;
 
 /**
+ * {@link org.springframework.beans.factory.FactoryBean} 的实现，创建动态代理基于{@link org.springframework.beans.factory.BeanFactory}的bean
  * {@link org.springframework.beans.factory.FactoryBean} implementation that builds an
  * AOP proxy based on beans in Spring {@link org.springframework.beans.factory.BeanFactory}.
+ *
+ * {@link org.aopalliance.intercept.MethodInterceptor MethodInterceptors} 和 {@link org.springframework.aop.Advisor Advisors}
+ * 通过interceptorNames属性来标示bean列表，列表中的最后一个条目可以是目标bean的名称或 TargetSource；
  *
  * <p>{@link org.aopalliance.intercept.MethodInterceptor MethodInterceptors} and
  * {@link org.springframework.aop.Advisor Advisors} are identified by a list of bean
@@ -133,6 +137,7 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 
 
 	/**
+	 * 设置代理的接口，如果没有设置，一个cglib的代理被创建
 	 * Set the names of the interfaces we're proxying. If no interface
 	 * is given, a CGLIB for the actual class will be created.
 	 * <p>This is essentially equivalent to the "setInterfaces" method,
@@ -145,8 +150,14 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 	}
 
 	/**
+	 * 设置Advice/Advisor 名称列表，你必须设置在beanFactory中创建的bean名称
 	 * Set the list of Advice/Advisor bean names. This must always be set
 	 * to use this factory bean in a bean factory.
+	 * 引用的bean的类型应该是Interceptor，Advisor或Advice。列表中的最后一个条目可以是工厂中任何bean的名称。
+	 * 如果既不是Advice也不是Advisor，将会创建一个SingletonTargetSource来包装它。
+	 * 如果设置了“ target”或“ targetSource”或“ targetName”属性，
+	 * 则不能使用这种目标Bean，在这种情况下，“ interceptorNames”数组必须仅包含Advice / Advisor Bean名称。
+	 *
 	 * <p>The referenced beans should be of type Interceptor, Advisor or Advice
 	 * The last entry in the list can be the name of any bean in the factory.
 	 * If it's neither an Advice nor an Advisor, a new SingletonTargetSource
@@ -166,6 +177,9 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 	}
 
 	/**
+	 * 设置目标bean的名称。这是在“ interceptorNames”数组末尾指定目标名称的替代方法。
+	 * 您也可以分别通过“ target” /“ targetSource”属性直接指定目标对象或TargetSource对象。
+	 *
 	 * Set the name of the target bean. This is an alternative to specifying
 	 * the target name at the end of the "interceptorNames" array.
 	 * <p>You can also specify a target object or a TargetSource object
@@ -179,6 +193,8 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 	}
 
 	/**
+	 * 设置是否自动检测代理接口（如果未指定）。
+	 * 默认值为“ true”。如果未指定接口，请关闭此标志以为完整目标类创建CGLIB代理。
 	 * Set whether to autodetect proxy interfaces if none specified.
 	 * <p>Default is "true". Turn this flag off to create a CGLIB
 	 * proxy for the full target class if no interfaces specified.
@@ -201,6 +217,7 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 	}
 
 	/**
+	 * 指定要使用的AdvisorAdapterRegistry。默认值为全局AdvisorAdapterRegistry。
 	 * Specify the AdvisorAdapterRegistry to use.
 	 * Default is the global AdvisorAdapterRegistry.
 	 * @see org.springframework.aop.framework.adapter.GlobalAdvisorAdapterRegistry
