@@ -26,6 +26,9 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.PatternMatchUtils;
 
 /**
+ * 无法对重载（Overload）的方法名进行匹配，因为它仅对方法名进行匹配，
+ * 不会考虑参数相关信息，而且也没有提供可以指定参数匹配信息的途径。
+ *
  * Pointcut bean for simple method name matches, as alternative to regexp patterns.
  * Does not handle overloaded methods: all methods with a given name will be eligible.
  *
@@ -35,6 +38,7 @@ import org.springframework.util.PatternMatchUtils;
  * @since 11.02.2004
  * @see #isMatch
  */
+//通过方法名进行精确匹配的。 (PS: 其中 ClassFilter = ClassFilter.TRUE)
 @SuppressWarnings("serial")
 public class NameMatchMethodPointcut extends StaticMethodMatcherPointcut implements Serializable {
 

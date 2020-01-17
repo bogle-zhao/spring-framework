@@ -50,6 +50,7 @@ import org.springframework.lang.Nullable;
 public interface MethodMatcher {
 
 	/**
+	 * 静态方法匹配判断
 	 * Perform static checking whether the given method matches.
 	 * <p>If this returns {@code false} or if the {@link #isRuntime()}
 	 * method returns {@code false}, no runtime check (i.e. no
@@ -63,6 +64,9 @@ public interface MethodMatcher {
 	boolean matches(Method method, @Nullable Class<?> targetClass);
 
 	/**
+	 * 判断静态方法匹配或动态方法匹配
+	 *      * true：动态方法匹配
+	 *      * false：静态方法匹配
 	 * Is this MethodMatcher dynamic, that is, must a final call be made on the
 	 * {@link #matches(java.lang.reflect.Method, Class, Object[])} method at
 	 * runtime even if the 2-arg matches method returns {@code true}?
@@ -75,6 +79,7 @@ public interface MethodMatcher {
 	boolean isRuntime();
 
 	/**
+	 * 动态方法匹配判断
 	 * Check whether there a runtime (dynamic) match for this method,
 	 * which must have matched statically.
 	 * <p>This method is invoked only if the 2-arg matches method returns

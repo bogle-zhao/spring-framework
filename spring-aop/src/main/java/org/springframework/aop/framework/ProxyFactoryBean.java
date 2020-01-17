@@ -94,6 +94,13 @@ import org.springframework.util.ObjectUtils;
  * @see org.springframework.aop.Advisor
  * @see Advised
  */
+/**
+ * • Target – 代理的目标对象
+ * • proxyInterfaces – 生成的代理类需要实现的接口列表
+ * • interceptorNames – 作用于target的通知或顾问名字的列表
+ * • Singleton – 工厂返回的代理类是否为单实例
+ * • proxyTargetClass – 是否代理目标类，而不是实现接口
+ */
 @SuppressWarnings("serial")
 public class ProxyFactoryBean extends ProxyCreatorSupport
 		implements FactoryBean<Object>, BeanClassLoaderAware, BeanFactoryAware {

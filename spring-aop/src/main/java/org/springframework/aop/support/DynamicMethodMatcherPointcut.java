@@ -21,6 +21,8 @@ import org.springframework.aop.MethodMatcher;
 import org.springframework.aop.Pointcut;
 
 /**
+ * 动态方法切点
+ * 动态方法切点的抽象基类，默认情况下匹配所有的类
  * Convenient superclass when we want to force subclasses to
  * implement MethodMatcher interface, but subclasses
  * will want to be pointcuts. The getClassFilter() method can

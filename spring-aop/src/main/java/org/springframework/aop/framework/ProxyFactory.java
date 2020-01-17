@@ -23,6 +23,9 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.ClassUtils;
 
 /**
+ * 1. •创建AOP proxy的基本方法，结合Spring的IoC容器一起使用
+ * 2. •使用ProxyFactoryBean最大的优点是：通知和切入点都可以被Spring的IoC管理起来
+ * 3. •通过使用Java的动态代理或CGLIB，能够代理接口或class
  * Factory for AOP proxies for programmatic use, rather than via declarative
  * setup in a bean factory. This class provides a simple way of obtaining
  * and configuring AOP proxy instances in custom user code.

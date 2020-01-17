@@ -50,7 +50,8 @@ import org.springframework.aop.TargetSource;
 public interface Advised extends TargetClassAware {
 
 	/**
-	 * Return whether the Advised configuration is frozen,
+	 * Return whether the Advised configuration is frozen,Advisor
+	 * AdvisorAdvisor
 	 * in which case no advice changes can be made.
 	 */
 	boolean isFrozen();
@@ -88,6 +89,7 @@ public interface Advised extends TargetClassAware {
 	TargetSource getTargetSource();
 
 	/**
+	 * 参考ProxyConfig.setExposeProxy()方法
 	 * Set whether the proxy should be exposed by the AOP framework as a
 	 * {@link ThreadLocal} for retrieval via the {@link AopContext} class.
 	 * <p>It can be necessary to expose the proxy if an advised object needs
@@ -201,7 +203,7 @@ public interface Advised extends TargetClassAware {
 	 * @see #addAdvice(int, Advice)
 	 * @see org.springframework.aop.support.DefaultPointcutAdvisor
 	 */
-	// 增加通知得相关方法  采用了适配器的模式
+	// 增加通知的相关方法  采用了适配器的模式
 	// 最终都会变成一个DefaultIntroductionAdvisor(包装Advice的)
 	void addAdvice(Advice advice) throws AopConfigException;
 

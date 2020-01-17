@@ -27,6 +27,13 @@ import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
 /**
+ * 流程切点
+ * 该切点是一个比较特殊的节点，它根据程序执行的堆栈信息查看目标方法是否由某一个方法直接或间接发起调用，一次来判断是否为匹配的链接点
+ * https://www.jianshu.com/p/320f6fe39f4b
+ *
+ * ControlFlowPointcut是Spring所提供的类：判断在方法的执行堆栈中，某个指定类的某个方法中，
+ * 是否曾经要求您的目标对象执行某个动作，由于这是在执行时期才会确定是否介入Advices，因此是Spring提供的动态Pointcut功能。
+ *
  * Pointcut and method matcher for use in simple <b>cflow</b>-style pointcut.
  * Note that evaluating such pointcuts is 10-15 times slower than evaluating
  * normal pointcuts, but they are useful in some cases.

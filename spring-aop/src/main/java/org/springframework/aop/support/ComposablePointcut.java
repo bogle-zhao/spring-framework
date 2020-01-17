@@ -24,6 +24,9 @@ import org.springframework.aop.Pointcut;
 import org.springframework.util.Assert;
 
 /**
+ * 该类是为实现创建多个切点而提供的操作类
+ * https://www.jianshu.com/p/320f6fe39f4b
+ *
  * Convenient class for building up pointcuts. All methods return
  * ComposablePointcut, so we can use a concise idiom like:
  *

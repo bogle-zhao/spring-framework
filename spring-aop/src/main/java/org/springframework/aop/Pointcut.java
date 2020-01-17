@@ -30,22 +30,29 @@ package org.springframework.aop;
  * @see org.springframework.aop.support.ClassFilters
  * @see org.springframework.aop.support.MethodMatchers
  */
+//它的作用就是定义切面的匹配点,简单的说就是我去切哪些类、哪些方法…） 在 Spring Aop 中匹配的点主要是 class 与 method 这两个方面, 分别为ClassFilter 与 MethodFilter
 public interface Pointcut {
 
 	/**
+	 * 类过滤器, 可以知道哪些类需要拦截
 	 * Return the ClassFilter for this pointcut.
+	 *
 	 * @return the ClassFilter (never {@code null})
 	 */
 	ClassFilter getClassFilter();
 
 	/**
+	 * 方法匹配器, 可以知道哪些方法需要拦截
 	 * Return the MethodMatcher for this pointcut.
+	 *
 	 * @return the MethodMatcher (never {@code null})
 	 */
 	MethodMatcher getMethodMatcher();
 
 
 	/**
+	 * 匹配所有对象的 Pointcut
+	 *
 	 * Canonical Pointcut instance that always matches.
 	 */
 	Pointcut TRUE = TruePointcut.INSTANCE;

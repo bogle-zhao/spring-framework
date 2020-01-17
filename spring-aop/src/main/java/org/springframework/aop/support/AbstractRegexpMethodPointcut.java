@@ -27,6 +27,9 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 /**
+ * 1. 根据正则表达式计算切入点，要匹配完整的类名和方法名
+ * 2. 对应的Advisor是RegexpMethodPointcutAdvisor，会根据当前JDK版本来决定使用JdkRegexpMethodPointcut，还是Perl5RegexpMethodPointcut
+ *
  * Abstract base regular expression pointcut bean. JavaBean properties are:
  * <ul>
  * <li>pattern: regular expression for the fully-qualified method names to match.

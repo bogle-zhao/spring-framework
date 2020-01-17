@@ -20,6 +20,8 @@ import org.springframework.aop.Pointcut;
 import org.springframework.lang.Nullable;
 
 /**
+ * 表达式切点
+ * 提供了对AspectJ切点表达式语法的支持
  * Interface to be implemented by pointcuts that use String expressions.
  *
  * @author Rob Harrop

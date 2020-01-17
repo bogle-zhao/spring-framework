@@ -21,6 +21,11 @@ import org.springframework.aop.MethodMatcher;
 import org.springframework.aop.Pointcut;
 
 /**
+ * 静态方法切点-
+ * 静态方法切点的抽象基类，默认情况下匹配所有的类。最常用的两个子类NameMatchMethodPointcut和 AbstractRegexpMethodPointcut ，
+ * 前者提供简单字符串匹配方法签名，后者使用正则表达式匹配方法签名。
+ *
+ * 链接：https://www.jianshu.com/p/320f6fe39f4b
  * Convenient superclass when we want to force subclasses to implement the
  * {@link MethodMatcher} interface but subclasses will want to be pointcuts.
  *

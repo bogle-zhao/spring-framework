@@ -41,6 +41,11 @@ import org.aopalliance.aop.Advice;
  * @author Rod Johnson
  * @author Juergen Hoeller
  */
+//由于增强包括横切代码，又包含部分连接点信息（方法前、方法后主方位信息），所以可以仅通过增强类生成一个切面。
+// 但切点仅仅代表目标类连接点的部分信息（类和方法的定位），所以仅有切点无法制作出一个切面，必须结合增强才能制作出切面。
+// Spring使用org.springframework.aop.Advisor接口标识切面概念，一个切面同时包含横切代码和连接点信息。
+
+//链接：https://www.jianshu.com/p/320f6fe39f4b
 public interface Advisor {
 
 	/**
@@ -52,6 +57,7 @@ public interface Advisor {
 
 
 	/**
+	 * //获取切面的通知Advice
 	 * Return the advice part of this aspect. An advice may be an
 	 * interceptor, a before advice, a throws advice, etc.
 	 * @return the advice that should apply if the pointcut matches
@@ -63,6 +69,7 @@ public interface Advisor {
 	Advice getAdvice();
 
 	/**
+	 * 判断这个通知是否和某个特定的实例对象相关
 	 * Return whether this advice is associated with a particular instance
 	 * (for example, creating a mixin) or shared with all instances of
 	 * the advised class obtained from the same Spring bean factory.
