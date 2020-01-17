@@ -22,6 +22,7 @@ import java.util.List;
 import org.springframework.util.Assert;
 
 /**
+ * 注册和触发监听器，借助DefaultAopProxyFactory获取代理
  * Base class for proxy factories.
  * Provides convenient access to a configurable AopProxyFactory.
  *
@@ -29,6 +30,12 @@ import org.springframework.util.Assert;
  * @since 2.0.3
  * @see #createAopProxy()
  */
+//ProxyCreatorSupport用于设置和保存下面三大信息：
+//
+//		1. 设置被代理对象target
+//		2. 设置代理接口
+//		3. 设置通知advice
+//ProxyCreatorSupport继承AdvisedSupport,主要提供了createAopProxy方法用来得到用来生成代理对象的AopProxy对象
 @SuppressWarnings("serial")
 public class ProxyCreatorSupport extends AdvisedSupport {
 
@@ -41,6 +48,7 @@ public class ProxyCreatorSupport extends AdvisedSupport {
 
 
 	/**
+	 * // new了一个aopProxyFactory
 	 * Create a new ProxyCreatorSupport instance.
 	 */
 	public ProxyCreatorSupport() {
@@ -104,6 +112,7 @@ public class ProxyCreatorSupport extends AdvisedSupport {
 		if (!this.active) {
 			activate();
 		}
+		// 由此可议看出，它还是委托给了`AopProxyFactory`去做这件事,它的实现类为：DefaultAopProxyFactory
 		return getAopProxyFactory().createAopProxy(this);
 	}
 

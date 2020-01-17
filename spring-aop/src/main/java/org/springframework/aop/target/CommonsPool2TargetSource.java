@@ -27,6 +27,12 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
+ * 池化的TargetSource
+ * 其基本具有平常所使用的“池”的概念的所有属性，
+ * 比如：最小空闲数，最大空闲数，最大等待时间等等。
+ * 实际上，CommonsPool2TargetSource的实现是将其委托给了ObjectPool进行，
+ * 具体的也就是GenericObjectPool，其实现了ObjectPool接口
+ *
  * {@link org.springframework.aop.TargetSource} implementation that holds
  * objects in a configurable Apache Commons2 Pool.
  *

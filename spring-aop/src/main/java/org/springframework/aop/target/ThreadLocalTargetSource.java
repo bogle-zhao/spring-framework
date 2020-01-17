@@ -27,6 +27,25 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.core.NamedThreadLocal;
 
 /**
+ *
+ * ThreadLocalTargetSource也就是和线程绑定的TargetSource，可以理解，其底层实现必然使用的是ThreadLocal。
+ * 既然使用了ThreadLocal，也就是说我们需要注意两个问题：
+ *
+ * 目标对象必须声明为prototype类型，因为每个线程都会持有一个不一样的对象；
+ * 目标对象必须是无状态的，因为目标对象是和当前线程绑定的，而Spring是使用的线程池处理的请求，
+ * 因而每个线程可能处理不同的请求，因而为了避免造成问题，目标对象必须是无状态的。
+ * ————————————————
+ * 原文链接：https://blog.csdn.net/shenchaohao12321/article/details/85538163
+ *
+ * 这里ThreadLocalTargetSource主要集成了AbstractPrototypeBasedTargetSource和DisposableBean。
+ * 关于AbstractPrototypeBasedTargetSource前面已经讲过了，读者可以到前面翻看；
+ * 而DisposableBean的作用主要是提供一个方法，以供给Spring在销毁当前对象的时候调用。
+ * 也就是说Spring在销毁当前TargetSource对象的时候会首先销毁其生成的各个目标对象。
+ * 这里需要注意的是，TargetSource和生成的目标对象是两个对象，前面讲的TargetSouce都是单例的，
+ * 只是生成的目标对象可能是单例的，也可能是多例的。
+ * ————————————————
+ * 原文链接：https://blog.csdn.net/shenchaohao12321/article/details/85538163
+ *
  * Alternative to an object pool. This {@link org.springframework.aop.TargetSource}
  * uses a threading model in which every thread has its own copy of the target.
  * There's no contention for targets. Target object creation is kept to a minimum

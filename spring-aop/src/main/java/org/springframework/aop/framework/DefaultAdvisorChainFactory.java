@@ -36,6 +36,10 @@ import org.springframework.lang.Nullable;
 
 /**
  * https://www.jianshu.com/p/30dcd2e25868
+ * https://cloud.tencent.com/developer/article/1497612
+ * //DefaultAdvisorChainFactory：生成拦截器链
+ *
+ * 借助DefaultAdvisorAdapterRegistry将Advisor集合转换成MethodInterceptor集合
  *
  * A simple but definitive way of working out an advice chain for a Method,
  * given an {@link Advised} object. Always rebuilds each advice chain;
@@ -56,6 +60,7 @@ public class DefaultAdvisorChainFactory implements AdvisorChainFactory, Serializ
 		// This is somewhat tricky... We have to process introductions first,
 		// but we need to preserve order in the ultimate list. 我们首先处理introductions通知，我们需要在最终的列表中将顺序保存起来
 		//通过config获得配置好的advisor链，AdvisedSupport实现了Advised
+		// 拿到代理里面所有的通知们：getAdvisors
 		List<Object> interceptorList = new ArrayList<Object>(config.getAdvisors().length);
 		//实际对象
 		Class<?> actualClass = (targetClass != null ? targetClass : method.getDeclaringClass());
@@ -72,6 +77,7 @@ public class DefaultAdvisorChainFactory implements AdvisorChainFactory, Serializ
 					MethodMatcher mm = pointcutAdvisor.getPointcut().getMethodMatcher();
 					if (MethodMatchers.matches(mm, method, actualClass, hasIntroductions)) {
 						MethodInterceptor[] interceptors = registry.getInterceptors(advisor);
+						// 动态匹配
 						if (mm.isRuntime()) {
 							// Creating a new object instance in the getInterceptors() method
 							// isn't a problem as we normally cache created chains.
@@ -81,6 +87,7 @@ public class DefaultAdvisorChainFactory implements AdvisorChainFactory, Serializ
 							}
 						}
 						else {
+							// 静态匹配
 							interceptorList.addAll(Arrays.asList(interceptors));
 						}
 					}

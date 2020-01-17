@@ -26,6 +26,8 @@ import org.springframework.aop.MethodBeforeAdvice;
 import org.springframework.util.Assert;
 
 /**
+ * 参考：AdvisorAdapterRegistry和DefaultAdvisorAdapterRegistry,GlobalAdvisorAdapterRegistry用于管理管理AdvisorAdapter的
+ *
  * Interceptor to wrap am {@link org.springframework.aop.MethodBeforeAdvice}.
  * Used internally by the AOP framework; application developers should not need
  * to use this class directly.
@@ -53,6 +55,7 @@ public class MethodBeforeAdviceInterceptor implements MethodInterceptor, BeforeA
 	@Override
 	public Object invoke(MethodInvocation mi) throws Throwable {
 		this.advice.before(mi.getMethod(), mi.getArguments(), mi.getThis());
+		// 最终调用，实现了链式调用的效果
 		return mi.proceed();
 	}
 

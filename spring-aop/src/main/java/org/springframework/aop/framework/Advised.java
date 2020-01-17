@@ -23,6 +23,15 @@ import org.springframework.aop.TargetClassAware;
 import org.springframework.aop.TargetSource;
 
 /**
+ * Advice:    通知拦截器
+ *  Advisor:   通知 + 切入点的适配器
+ *  Advised:   包含所有的Advised 和 Advice
+ *
+ *  该接口用于保存一个代理的相关配置。比如保存了这个代理相关的拦截器、通知、增强器等等。
+ *  所有的代理对象都实现了该接口（我们就能够通过一个代理对象获取这个代理对象怎么被代理出来的相关信息）
+ *
+ * https://cloud.tencent.com/developer/article/1497612
+ *
  * Interface to be implemented by classes that hold the configuration
  * of a factory of AOP proxies. This configuration includes the
  * Interceptors and other advice, Advisors, and the proxied interfaces.
@@ -35,6 +44,9 @@ import org.springframework.aop.TargetSource;
  * @since 13.03.2003
  * @see org.springframework.aop.framework.AdvisedSupport
  */
+//Advised接口其实就代表了被代理的对象（此接口是Spring AOP提供，它提供了方法可以对代理进行操作，比如移除一个切面之类的），它持有了代理对象的一些属性，通过它可以对生成的代理对象的一些属性进行人为干预
+// 默认情况，我们可以这么完 Advised target = (Advised) context.getBean("opaqueTest"); 从而就可以对该代理持有的一些属性进行干预勒   若此值为true，就不能这么玩了
+//https://cloud.tencent.com/developer/article/1497612
 public interface Advised extends TargetClassAware {
 
 	/**
@@ -49,18 +61,21 @@ public interface Advised extends TargetClassAware {
 	boolean isProxyTargetClass();
 
 	/**
+	 * //返回被代理了的接口列表
 	 * Return the interfaces proxied by the AOP proxy.
 	 * <p>Will not include the target class, which may also be proxied.
 	 */
 	Class<?>[] getProxiedInterfaces();
 
 	/**
+	 * // 检查这个确定的接口是否被代理了
 	 * Determine whether the given interface is proxied.
 	 * @param intf the interface to check
 	 */
 	boolean isInterfaceProxied(Class<?> intf);
 
 	/**
+	 * // 设置一个源。只有isFrozen为false才能调用此方法
 	 * Change the {@code TargetSource} used by this {@code Advised} object.
 	 * <p>Only works if the configuration isn't {@linkplain #isFrozen frozen}.
 	 * @param targetSource new TargetSource to use
@@ -93,6 +108,7 @@ public interface Advised extends TargetClassAware {
 	boolean isExposeProxy();
 
 	/**
+	 * // 默认是false，和ClassFilter接口有关，
 	 * Set whether this proxy configuration is pre-filtered so that it only
 	 * contains applicable advisors (matching this proxy's target class).
 	 * <p>Default is "false". Set this to "true" if the advisors have been
@@ -123,6 +139,7 @@ public interface Advised extends TargetClassAware {
 	 * @param advisor the advisor to add to the end of the chain
 	 * @throws AopConfigException in case of invalid advice
 	 */
+	//相当于在通知（拦截器）链的最后一个加入一个新的
 	void addAdvisor(Advisor advisor) throws AopConfigException;
 
 	/**
@@ -139,6 +156,7 @@ public interface Advised extends TargetClassAware {
 	 * @return {@code true} if the advisor was removed; {@code false}
 	 * if the advisor was not found and hence could not be removed
 	 */
+	// 按照角标移除一个通知
 	boolean removeAdvisor(Advisor advisor);
 
 	/**
@@ -183,6 +201,8 @@ public interface Advised extends TargetClassAware {
 	 * @see #addAdvice(int, Advice)
 	 * @see org.springframework.aop.support.DefaultPointcutAdvisor
 	 */
+	// 增加通知得相关方法  采用了适配器的模式
+	// 最终都会变成一个DefaultIntroductionAdvisor(包装Advice的)
 	void addAdvice(Advice advice) throws AopConfigException;
 
 	/**

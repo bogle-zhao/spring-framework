@@ -22,6 +22,17 @@ import org.springframework.aop.TargetSource;
 import org.springframework.util.Assert;
 
 /**
+ *
+ * HotSwappableTargetSource使用户可以以线程安全的方式切换目标对象,
+ * 提供所谓的热交换功能。这个特性是很有用的,尽管它的开启需要AOP应用进行显式的配置,
+ * 但配置并不复杂,在使用时,只需要把 HotSwappableargetSource配置到
+ * ProxyFactoryBean的Target属性就可以了,在需要更换真正的目标对象时,
+ * 调用HotSwappableTargetSource的swap方法就可以完成。由此可见,
+ * 对HotSwappableTargetSource的热交换功能的使用,是需要触发swap方法调用的。
+ * 这个swap方法的实现很简单,它完成 target对象的替换,也就是说,它使用新的
+ * target对象来替换原有的 target对象。为了保证线程安全,需要把这个替换方法设为 synchronized方法。
+ * ————————————————
+ * 原文链接：https://blog.csdn.net/shenchaohao12321/article/details/85538163
  * {@link org.springframework.aop.TargetSource} implementation that
  * caches a local target object, but allows the target to be swapped
  * while the application is running.

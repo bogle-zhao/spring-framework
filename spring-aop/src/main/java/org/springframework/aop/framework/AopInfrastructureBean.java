@@ -17,6 +17,12 @@
 package org.springframework.aop.framework;
 
 /**
+ *
+ * 免被AOP代理的标记接口
+ * AopInfrastructureBean是一个标记接口。若Bean实现了此接口，表明它是一个Spring AOP的基础类，那么这个类是不会被AOP给代理的，即使它能被切面切进去~~~
+ * https://cloud.tencent.com/developer/article/1497612
+ *
+ * 标记接口，指示作为Spring AOP基础结构一部分的bean。特别是，这意味着即使切入点匹配，任何此类bean也不会进行自动代理。
  * Marker interface that indicates a bean that is part of Spring's
  * AOP infrastructure. In particular, this implies that any such bean
  * is not subject to auto-proxying, even if a pointcut would match.
