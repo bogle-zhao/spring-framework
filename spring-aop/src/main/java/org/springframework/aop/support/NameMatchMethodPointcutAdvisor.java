@@ -29,6 +29,7 @@ import org.springframework.aop.Pointcut;
  * @author Rob Harrop
  * @see NameMatchMethodPointcut
  */
+//通过该类可以定义按方法名定义切点的切面
 @SuppressWarnings("serial")
 public class NameMatchMethodPointcutAdvisor extends AbstractGenericPointcutAdvisor {
 

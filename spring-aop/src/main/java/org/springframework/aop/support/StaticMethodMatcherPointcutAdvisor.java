@@ -32,6 +32,7 @@ import org.springframework.util.Assert;
  * @author Rod Johnson
  * @author Juergen Hoeller
  */
+//静态方法匹配器切点定义的切面，默认情况下匹配所有的的目标类。
 @SuppressWarnings("serial")
 public abstract class StaticMethodMatcherPointcutAdvisor extends StaticMethodMatcherPointcut
 		implements PointcutAdvisor, Ordered, Serializable {

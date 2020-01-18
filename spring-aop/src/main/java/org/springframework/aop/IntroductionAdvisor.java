@@ -17,6 +17,11 @@
 package org.springframework.aop;
 
 /**
+ * 引介切面IntroductionAdvisor
+ * org.springframework.aop.IntroductionAdvisor代表引介切面， 引介切面是对应引介增强的特殊的切面，它应用于类层上面，所以引介切点使用ClassFilter进行定义。
+ *
+ * https://blog.csdn.net/yangshangwei/article/details/77187087
+ *
  * Superinterface for advisors that perform one or more AOP <b>introductions</b>.
  *
  * <p>This interface cannot be implemented directly; subinterfaces must

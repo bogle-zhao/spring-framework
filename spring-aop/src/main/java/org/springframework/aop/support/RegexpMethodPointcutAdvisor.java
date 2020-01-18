@@ -42,6 +42,7 @@ import org.springframework.util.ObjectUtils;
  * @see #setPatterns
  * @see JdkRegexpMethodPointcut
  */
+//对于按照正则表达式匹配的方法名进行切点定义的切面，可以扩展该实现类进行操作。
 @SuppressWarnings("serial")
 public class RegexpMethodPointcutAdvisor extends AbstractGenericPointcutAdvisor {
 

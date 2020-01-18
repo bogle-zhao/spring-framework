@@ -32,6 +32,7 @@ import org.springframework.util.Assert;
  * @author Juergen Hoeller
  * @since 2.0
  */
+//用于AspectJ语法定义切点的切面
 public class AspectJPointcutAdvisor implements PointcutAdvisor, Ordered {
 
 	private final AbstractAspectJAdvice advice;
