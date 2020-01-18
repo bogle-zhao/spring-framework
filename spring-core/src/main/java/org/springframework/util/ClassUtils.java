@@ -42,6 +42,9 @@ import java.util.Set;
 import org.springframework.lang.Nullable;
 
 /**
+ *
+ * https://www.jianshu.com/p/83cbbd0b8b10
+ *
  * Miscellaneous class utility methods.
  * Mainly for internal use within the framework.
  *
@@ -353,6 +356,8 @@ public abstract class ClassUtils {
 	}
 
 	/**
+	 * 判断一个类型是否在指定类加载器中可见。
+	 *
 	 * Check whether the given class is visible in the given ClassLoader.
 	 * @param clazz the class to check (typically an interface)
 	 * @param classLoader the ClassLoader to check against
@@ -685,6 +690,7 @@ public abstract class ClassUtils {
 	}
 
 	/**
+	 * 获取一个对象的所有接口；
 	 * Return all interfaces that the given instance implements as an array,
 	 * including ones implemented by superclasses.
 	 * @param instance the instance to analyze for interfaces
@@ -696,6 +702,8 @@ public abstract class ClassUtils {
 	}
 
 	/**
+	 * 获取一个类型的所有接口
+	 *
 	 * Return all interfaces that the given class implements as an array,
 	 * including ones implemented by superclasses.
 	 * <p>If the class itself is an interface, it gets returned as sole interface.
@@ -707,6 +715,7 @@ public abstract class ClassUtils {
 	}
 
 	/**
+	 * 获取指定类加载器下的指定类型的所有接口
 	 * Return all interfaces that the given class implements as an array,
 	 * including ones implemented by superclasses.
 	 * <p>If the class itself is an interface, it gets returned as sole interface.
@@ -720,6 +729,7 @@ public abstract class ClassUtils {
 	}
 
 	/**
+	 * 获取一个对象的所有接口，返回Set；
 	 * Return all interfaces that the given instance implements as a Set,
 	 * including ones implemented by superclasses.
 	 * @param instance the instance to analyze for interfaces
@@ -731,6 +741,7 @@ public abstract class ClassUtils {
 	}
 
 	/**
+	 * 获取一个类的所有接口，返回Set；
 	 * Return all interfaces that the given class implements as a Set,
 	 * including ones implemented by superclasses.
 	 * <p>If the class itself is an interface, it gets returned as sole interface.
@@ -742,6 +753,8 @@ public abstract class ClassUtils {
 	}
 
 	/**
+	 * 获取指定类加载器下的指定类型的所有接口；返回Set，这个方法才是上面5个方法的调用方法；
+	 *
 	 * Return all interfaces that the given class implements as a Set,
 	 * including ones implemented by superclasses.
 	 * <p>If the class itself is an interface, it gets returned as sole interface.
@@ -752,10 +765,12 @@ public abstract class ClassUtils {
 	 */
 	public static Set<Class<?>> getAllInterfacesForClassAsSet(Class<?> clazz, @Nullable ClassLoader classLoader) {
 		Assert.notNull(clazz, "Class must not be null");
+		//如果本身就是接口，返回自己
 		if (clazz.isInterface() && isVisible(clazz, classLoader)) {
 			return Collections.singleton(clazz);
 		}
 		Set<Class<?>> interfaces = new LinkedHashSet<>();
+		//使用递归获取类继承体系上所有接口；
 		Class<?> current = clazz;
 		while (current != null) {
 			Class<?>[] ifcs = current.getInterfaces();
