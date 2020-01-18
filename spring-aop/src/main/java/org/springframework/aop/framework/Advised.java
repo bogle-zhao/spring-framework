@@ -47,6 +47,10 @@ import org.springframework.aop.TargetSource;
 //Advised接口其实就代表了被代理的对象（此接口是Spring AOP提供，它提供了方法可以对代理进行操作，比如移除一个切面之类的），它持有了代理对象的一些属性，通过它可以对生成的代理对象的一些属性进行人为干预
 // 默认情况，我们可以这么完 Advised target = (Advised) context.getBean("opaqueTest"); 从而就可以对该代理持有的一些属性进行干预勒   若此值为true，就不能这么玩了
 //https://cloud.tencent.com/developer/article/1497612
+
+//	Advised：该接口用于保存一个代理的相关配置（简单理解为这个对象保存了怎么创建一个代理对象的信息），
+//	比如这个代理配置相关的拦截器，建议(advisor)或者增强器（advice)；所有的代理对象都实现了该接口（我们就能够通过一个代理对象获取这个代理对象怎么被代理出来的相关信息）；
+// 链接：https://www.jianshu.com/p/273d8e2bb992
 public interface Advised extends TargetClassAware {
 
 	/**

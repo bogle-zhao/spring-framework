@@ -42,6 +42,9 @@ import org.springframework.util.ObjectUtils;
  * @author Juergen Hoeller
  * @see org.springframework.aop.support.AopUtils
  */
+//AopProxyUtils中的方法不多，但是其中的ultimateTargetClass和completeProxiedInterfaces方法确是Spring AOP中比较重要的方法，
+// 也给了我们一个入手观察Spring AOP真正实现过程的一个突破口；我认为这个，才是AopProxyUtils给我们的价值；
+//链接：https://www.jianshu.com/p/273d8e2bb992
 public abstract class AopProxyUtils {
 
 	/**
@@ -56,8 +59,11 @@ public abstract class AopProxyUtils {
 	@Nullable
 	public static Object getSingletonTarget(Object candidate) {
 		if (candidate instanceof Advised) {
+			//通过getTargetSource方法获取代理目标；
 			TargetSource targetSource = ((Advised) candidate).getTargetSource();
+			//如果代理目标对象是一个SingletonTargetSource；
 			if (targetSource instanceof SingletonTargetSource) {
+				//获取当前代理对象的真正目标对象（可能还是一个代理对象）
 				return ((SingletonTargetSource) targetSource).getTarget();
 			}
 		}
@@ -65,6 +71,7 @@ public abstract class AopProxyUtils {
 	}
 
 	/**
+	 * 获取一个代理对象的最终对象类型
 	 * Determine the ultimate target class of the given bean instance, traversing
 	 * not only a top-level proxy but any number of nested proxies as well &mdash;
 	 * as long as possible without side effects, that is, just for singleton targets.
@@ -76,13 +83,17 @@ public abstract class AopProxyUtils {
 	 */
 	public static Class<?> ultimateTargetClass(Object candidate) {
 		Assert.notNull(candidate, "Candidate object must not be null");
+		//current用于判断；
 		Object current = candidate;
 		Class<?> result = null;
+		//直到当前获得的对象不是TargetClassAware类型，TargetClassAware后面介绍；
 		while (current instanceof TargetClassAware) {
+			//获得当前对象（一个代理对象）代理的目标对象（这个对象可能还是一个代理对象）类型；
 			result = ((TargetClassAware) current).getTargetClass();
 			current = getSingletonTarget(current);
 		}
 		if (result == null) {
+			//如果获取到的目标对象是一个cglib代理对象，获取父类类型（才是目标类型）
 			result = (AopUtils.isCglibProxy(candidate) ? candidate.getClass().getSuperclass() : candidate.getClass());
 		}
 		return result;
@@ -98,6 +109,8 @@ public abstract class AopProxyUtils {
 	 * @see SpringProxy
 	 * @see Advised
 	 */
+//	很牛逼的方法来了，判断一个advised真正需要代理的目标接口列表。简单理解，比如在spring使用JDK proxy做代理的时候，这个方法返回的类型列表就是真正需要交给Proxy.newProxyInstance方法的接口列表，
+//	链接：https://www.jianshu.com/p/273d8e2bb992
 	public static Class<?>[] completeProxiedInterfaces(AdvisedSupport advised) {
 		return completeProxiedInterfaces(advised, false);
 	}
@@ -168,12 +181,16 @@ public abstract class AopProxyUtils {
 	 * in the original order (never {@code null} or empty)
 	 * @see Advised
 	 */
+//	该方法用于获取一个代理对象中的用户定义的接口，即非（Advised接口体系）之外的其他接口；
 	public static Class<?>[] proxiedUserInterfaces(Object proxy) {
+		//得到所有接口
 		Class<?>[] proxyInterfaces = proxy.getClass().getInterfaces();
 		int nonUserIfcCount = 0;
+		//如果是代理，一定实现了SpringProxy；
 		if (proxy instanceof SpringProxy) {
 			nonUserIfcCount++;
 		}
+		//如果是代理，可能实现了Advised；
 		if (proxy instanceof Advised) {
 			nonUserIfcCount++;
 		}
@@ -181,12 +198,15 @@ public abstract class AopProxyUtils {
 			nonUserIfcCount++;
 		}
 		Class<?>[] userInterfaces = new Class<?>[proxyInterfaces.length - nonUserIfcCount];
+		//拷贝proxyInterfaces中从第0位~第proxyInterfaces.length - nonUserIfcCount个
+		//去掉尾巴上的nonUserIfcCount个；
 		System.arraycopy(proxyInterfaces, 0, userInterfaces, 0, userInterfaces.length);
 		Assert.notEmpty(userInterfaces, "JDK proxy must implement one or more interfaces");
 		return userInterfaces;
 	}
 
 	/**
+	 * 判断两个（即将）代理出来的对象是否相同；
 	 * Check equality of the proxies behind the given AdvisedSupport objects.
 	 * Not the same as equality of the AdvisedSupport objects:
 	 * rather, equality of interfaces, advisors and target sources.
@@ -199,11 +219,13 @@ public abstract class AopProxyUtils {
 	/**
 	 * Check equality of the proxied interfaces behind the given AdvisedSupport objects.
 	 */
+//	判断两个（即将）代理出来的对象是否拥有相同接口；
 	public static boolean equalsProxiedInterfaces(AdvisedSupport a, AdvisedSupport b) {
 		return Arrays.equals(a.getProxiedInterfaces(), b.getProxiedInterfaces());
 	}
 
 	/**
+	 * 判断两个（即将）代理出来的对象是否拥有相同的建议者（Advisor）
 	 * Check equality of the advisors behind the given AdvisedSupport objects.
 	 */
 	public static boolean equalsAdvisors(AdvisedSupport a, AdvisedSupport b) {

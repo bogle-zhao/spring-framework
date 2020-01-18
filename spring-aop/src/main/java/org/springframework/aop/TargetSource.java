@@ -49,6 +49,8 @@ import org.springframework.lang.Nullable;
  * @author Rod Johnson
  * @author Juergen Hoeller
  */
+//TargetSource：该接口代表一个目标对象，在aop调用目标对象的时候，使用该接口返回真实的对象。比如该接口的一个实现：PrototypeTargetSource，那就是每次调用都返回一个全新的对象实例；
+//链接：https://www.jianshu.com/p/273d8e2bb992
 public interface TargetSource extends TargetClassAware {
 
 	/**

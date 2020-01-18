@@ -32,6 +32,8 @@ import org.springframework.lang.Nullable;
  * @since 2.0.3
  * @see org.springframework.aop.support.AopUtils#getTargetClass(Object)
  */
+//TargetClassAware：所有的Aop代理对象或者代理工厂（proxy factory)都要实现的接口，该接口用于暴露出被代理目标对象类型；
+//	https://www.jianshu.com/p/273d8e2bb992
 public interface TargetClassAware {
 
 	/**
