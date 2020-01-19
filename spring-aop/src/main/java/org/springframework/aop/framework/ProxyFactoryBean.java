@@ -163,6 +163,7 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 	 * 设置Advice/Advisor 名称列表，你必须设置在beanFactory中创建的bean名称
 	 * Set the list of Advice/Advisor bean names. This must always be set
 	 * to use this factory bean in a bean factory.
+	 *
 	 * 引用的bean的类型应该是Interceptor，Advisor或Advice。列表中的最后一个条目可以是工厂中任何bean的名称。
 	 * 如果既不是Advice也不是Advisor，将会创建一个SingletonTargetSource来包装它。
 	 * 如果设置了“ target”或“ targetSource”或“ targetName”属性，
