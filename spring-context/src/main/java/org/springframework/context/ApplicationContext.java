@@ -111,19 +111,38 @@ public interface ApplicationContext extends EnvironmentCapable, ListableBeanFact
 	ApplicationContext getParent();
 
 	/**
+	 *
+	 * 为这个上下文公开AutowireCapableBeanFactory功能。
 	 * Expose AutowireCapableBeanFactory functionality for this context.
+	 *
+	 * 应用程序代码通常不使用这种方法，除非用于初始化存在于应用程序上下文之外的bean实例，
+	 * 并将Spring bean的生命周期(全部或部分)应用于这些实例。
 	 * <p>This is not typically used by application code, except for the purpose of
 	 * initializing bean instances that live outside of the application context,
 	 * applying the Spring bean lifecycle (fully or partly) to them.
+	 *
+	 * 另外，ConfigurableApplicationContext接口公开的内部BeanFactory也提供了对AutowireCapableBeanFactory接口的访问
 	 * <p>Alternatively, the internal BeanFactory exposed by the
 	 * {@link ConfigurableApplicationContext} interface offers access to the
-	 * {@link AutowireCapableBeanFactory} interface too. The present method mainly
+	 * {@link AutowireCapableBeanFactory} interface too.
+	 *
+	 * 本方法主要是作为ApplicationContext接口上的一个方便的、特定的工具。
+	 * The present method mainly
 	 * serves as a convenient, specific facility on the ApplicationContext interface.
+	 *
+	 * 从4.2开始，该方法将在应用程序上下文关闭后一致抛出IllegalStateException
 	 * <p><b>NOTE: As of 4.2, this method will consistently throw IllegalStateException
-	 * after the application context has been closed.</b> In current Spring Framework
+	 * after the application context has been closed.</b>
+	 *
+	 * 在当前的Spring框架版本中，只有可刷新的应用程序上下文才会这样做;从4.2开始，所有应用程序上下文实现都必须遵守。
+	 *
+	 * In current Spring Framework
 	 * versions, only refreshable application contexts behave that way; as of 4.2,
 	 * all application context implementations will be required to comply.
+	 *
 	 * @return the AutowireCapableBeanFactory for this context
+	 *
+	 * 如果上下文不支持AutowireCapableBeanFactory接口，或者还没有包含支持autowire的bean工厂(例如，如果从未调用refresh())，或者上下文已经关闭
 	 * @throws IllegalStateException if the context does not support the
 	 * {@link AutowireCapableBeanFactory} interface, or does not hold an
 	 * autowire-capable bean factory yet (e.g. if {@code refresh()} has
