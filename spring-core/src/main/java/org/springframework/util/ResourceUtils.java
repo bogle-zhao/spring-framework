@@ -27,6 +27,7 @@ import java.net.URLConnection;
 import org.springframework.lang.Nullable;
 
 /**
+ *
  * Utility methods for resolving resource locations to files in the
  * file system. Mainly for internal use within the framework.
  *
