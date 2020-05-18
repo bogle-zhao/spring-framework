@@ -28,13 +28,15 @@ import org.springframework.lang.Nullable;
 public interface PropertySources extends Iterable<PropertySource<?>> {
 
 	/**
+	 * 返回是否包含具有给定名称的属性源。
 	 * Return whether a property source with the given name is contained.
 	 * @param name the {@linkplain PropertySource#getName() name of the property source} to find
 	 */
-	//是否包含某个属性
+	//返回是否包含具有给定名称的属性源。
 	boolean contains(String name);
 
 	/**
+	 * 返回具有给定名称的属性源，如果未找到则为null
 	 * Return the property source with the given name, {@code null} if not found.
 	 * @param name the {@linkplain PropertySource#getName() name of the property source} to find
 	 */

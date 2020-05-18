@@ -20,6 +20,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.ResourceUtils;
 
 /**
+ * https://blog.csdn.net/andy_zhang2007/article/details/85474729
+ *
  * 加载资源的策略接口(比如：类路径或文件系统资源)。
  * 一个org.springframework.context。ApplicationContext需要提供这个功能，
  * 加上扩展的org.springframework.core.io.support.ResourcePatternResolver支持。
@@ -46,11 +48,19 @@ import org.springframework.util.ResourceUtils;
  */
 public interface ResourceLoader {
 
+	// 从 classpath 上加载资源的伪URL前缀: classpath:
 	/** Pseudo URL prefix for loading from the class path: "classpath:" */
 	String CLASSPATH_URL_PREFIX = ResourceUtils.CLASSPATH_URL_PREFIX;
 
 
 	/**
+	 * 给定资源路径，返回相应的资源Resource对象。所返回的Resource对象，
+	 * 也可以叫做资源句柄，必须是可重用的资源描述符，允许多次在其上
+	 * 调用方法Resource#getInputStream()。
+	 * 另外 :
+	 * 1. 必须支持全路径URL : 比如 "file:C:/test.dat".
+	 * 2. 必须支持classpath伪URL : 比如 "classpath:test.dat".
+	 * 3. 应该支持相对文件路径：比如 "WEB-INF/test.dat". (实现相关)
 	 * Return a Resource handle for the specified resource location.
 	 * <p>The handle should always be a reusable resource descriptor,
 	 * allowing for multiple {@link Resource#getInputStream()} calls.
@@ -61,10 +71,14 @@ public interface ResourceLoader {
 	 * (This will be implementation-specific, typically provided by an
 	 * ApplicationContext implementation.)
 	 * </ul>
+	 *
+	 * 注意 ： 所返回的资源句柄并不意味着对应的资源是已经存在的，所传入的参数
+	 * 只是一个资源路径，并不代表相应的资源已经存在；使用者必须调用方法Resource#exists
+	 * 来判断对应资源的存在性。
 	 * <p>Note that a Resource handle does not imply an existing resource;
 	 * you need to invoke {@link Resource#exists} to check for existence.
-	 * @param location the resource location
-	 * @return a corresponding Resource handle (never {@code null})
+	 * @param location the resource location	资源路径
+	 * @return a corresponding Resource handle (never {@code null})	相应的资源句柄，总是不为null(哪怕对应的资源不存在)
 	 * @see #CLASSPATH_URL_PREFIX
 	 * @see Resource#exists()
 	 * @see Resource#getInputStream()
@@ -72,6 +86,7 @@ public interface ResourceLoader {
 	Resource getResource(String location);
 
 	/**
+	 * 暴露当前ResourceLoader所使用的ClassLoader给外部。
 	 * Expose the ClassLoader used by this ResourceLoader.
 	 * <p>Clients which need to access the ClassLoader directly can do so
 	 * in a uniform manner with the ResourceLoader, rather than relying

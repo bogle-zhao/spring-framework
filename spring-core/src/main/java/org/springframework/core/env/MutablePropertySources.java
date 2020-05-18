@@ -26,6 +26,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.lang.Nullable;
 
 /**
+ * PropertySources接口的默认实现。允许对包含的属性源进行操作，并提供用于复制现有PropertySources实例的构造函数。
  * The default implementation of the {@link PropertySources} interface.
  * Allows manipulation of contained property sources and provides a constructor
  * for copying an existing {@code PropertySources} instance.

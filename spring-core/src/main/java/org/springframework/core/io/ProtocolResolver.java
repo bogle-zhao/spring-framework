@@ -19,8 +19,9 @@ package org.springframework.core.io;
 import org.springframework.lang.Nullable;
 
 /**
+ * 特定于协议的资源句柄的解决策略
  * A resolution strategy for protocol-specific resource handles.
- *
+ * 用作DefaultResourceLoader的SPI,允许在不实现接口的情况下处理自定义协议
  * <p>Used as an SPI for {@link DefaultResourceLoader}, allowing for
  * custom protocols to be handled without subclassing the loader
  * implementation (or application context implementation).
@@ -33,6 +34,7 @@ import org.springframework.lang.Nullable;
 public interface ProtocolResolver {
 
 	/**
+	 * 如果此实现的协议匹配，则根据给定的资源加载器解析给定的位置
 	 * Resolve the given location against the given resource loader
 	 * if this implementation's protocol matches.
 	 * @param location the user-specified resource location
