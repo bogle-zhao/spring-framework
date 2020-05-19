@@ -28,6 +28,11 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.lang.Nullable;
 
 /**
+ * 占位符解析器
+ * <br/>
+ * 用于处理具有占位符值的字符串的实用程序类。占位符的形式如${name}
+ * 使用PropertyPlaceholderHelper，这些占位符可以替换用户提供的值
+ * <br/>
  * Utility class for working with Strings that have placeholder values in them. A placeholder takes the form
  * {@code ${name}}. Using {@code PropertyPlaceholderHelper} these placeholders can be substituted for
  * user-supplied values. <p> Values for substitution can be supplied using a {@link Properties} instance or
@@ -56,13 +61,15 @@ public class PropertyPlaceholderHelper {
 
 	private final String simplePrefix;
 
+	//默认值分割符
 	@Nullable
 	private final String valueSeparator;
-
+	//忽略不可解析的占位符，如设置为false，碰到不可解析的占位符，抛出异常
 	private final boolean ignoreUnresolvablePlaceholders;
 
 
 	/**
+	 * 创建一个新的PropertyPlaceholderHelper，它使用提供的前缀和后缀。将忽略无法解析的占位符。
 	 * Creates a new {@code PropertyPlaceholderHelper} that uses the supplied prefix and suffix.
 	 * Unresolvable placeholders are ignored.
 	 * @param placeholderPrefix the prefix that denotes the start of a placeholder
@@ -73,13 +80,15 @@ public class PropertyPlaceholderHelper {
 	}
 
 	/**
+	 * 创建一个新的PropertyPlaceholderHelper，它使用提供的前缀和后缀。
+	 *
 	 * Creates a new {@code PropertyPlaceholderHelper} that uses the supplied prefix and suffix.
 	 * @param placeholderPrefix the prefix that denotes the start of a placeholder
 	 * @param placeholderSuffix the suffix that denotes the end of a placeholder
 	 * @param valueSeparator the separating character between the placeholder variable
-	 * and the associated default value, if any
+	 * and the associated default value, if any 占位符变量和相关联的默认值(如果有的话)之间的分隔字符
 	 * @param ignoreUnresolvablePlaceholders indicates whether unresolvable placeholders should
-	 * be ignored ({@code true}) or cause an exception ({@code false})
+	 * be ignored ({@code true}) or cause an exception ({@code false}) 指示是否应该忽略不可解析占位符(true)或导致异常(false)
 	 */
 	public PropertyPlaceholderHelper(String placeholderPrefix, String placeholderSuffix,
 			@Nullable String valueSeparator, boolean ignoreUnresolvablePlaceholders) {
