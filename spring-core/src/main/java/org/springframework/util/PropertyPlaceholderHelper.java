@@ -28,6 +28,8 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.lang.Nullable;
 
 /**
+ * https://blog.csdn.net/weixin_39471249/article/details/79473772
+ *
  * 占位符解析器
  * <br/>
  * 用于处理具有占位符值的字符串的实用程序类。占位符的形式如${name}
