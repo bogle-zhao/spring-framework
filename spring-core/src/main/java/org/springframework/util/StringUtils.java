@@ -36,6 +36,8 @@ import java.util.TimeZone;
 import org.springframework.lang.Nullable;
 
 /**
+ * https://www.jianshu.com/p/da7d986cf19e
+ *
  * Miscellaneous {@link String} utility methods.
  *
  * <p>Mainly for internal use within the framework; consider
@@ -109,6 +111,8 @@ public abstract class StringUtils {
 	}
 
 	/**
+	 * 字符串是否为空，或者长度为0
+	 *
 	 * Check that the given {@code String} is neither {@code null} nor of length 0.
 	 * <p>Note: this method returns {@code true} for a {@code String} that
 	 * purely consists of whitespace.
@@ -143,6 +147,7 @@ public abstract class StringUtils {
 	}
 
 	/**
+	 * 字符串是否有内容（不为空，且不全为空格）
 	 * Check whether the given {@code String} contains actual <em>text</em>.
 	 * <p>More specifically, this method returns {@code true} if the
 	 * {@code String} is not {@code null}, its length is greater than 0,
@@ -167,6 +172,7 @@ public abstract class StringUtils {
 	}
 
 	/**
+	 * 字符串是否包含空格
 	 * Check whether the given {@code CharSequence} contains any whitespace characters.
 	 * @param str the {@code CharSequence} to check (may be {@code null})
 	 * @return {@code true} if the {@code CharSequence} is not empty and
@@ -199,6 +205,7 @@ public abstract class StringUtils {
 	}
 
 	/**
+	 * 去掉字符串前后的空格
 	 * Trim leading and trailing whitespace from the given {@code String}.
 	 * @param str the {@code String} to check
 	 * @return the trimmed {@code String}
@@ -224,6 +231,7 @@ public abstract class StringUtils {
 	}
 
 	/**
+	 * 去掉字符串中所有的空格
 	 * Trim <i>all</i> whitespace from the given {@code String}:
 	 * leading, trailing, and in between characters.
 	 * @param str the {@code String} to check
@@ -247,6 +255,7 @@ public abstract class StringUtils {
 	}
 
 	/**
+	 * 去掉字符串开头的空格
 	 * Trim leading whitespace from the given {@code String}.
 	 * @param str the {@code String} to check
 	 * @return the trimmed {@code String}
@@ -265,6 +274,7 @@ public abstract class StringUtils {
 	}
 
 	/**
+	 * 去掉字符串结束的空格
 	 * Trim trailing whitespace from the given {@code String}.
 	 * @param str the {@code String} to check
 	 * @return the trimmed {@code String}
@@ -283,6 +293,7 @@ public abstract class StringUtils {
 	}
 
 	/**
+	 * 去掉字符串开头的指定字符
 	 * Trim all occurrences of the supplied leading character from the given {@code String}.
 	 * @param str the {@code String} to check
 	 * @param leadingCharacter the leading character to be trimmed
@@ -301,6 +312,7 @@ public abstract class StringUtils {
 	}
 
 	/**
+	 * 去掉字符串结尾的指定字符
 	 * Trim all occurrences of the supplied trailing character from the given {@code String}.
 	 * @param str the {@code String} to check
 	 * @param trailingCharacter the trailing character to be trimmed
@@ -319,6 +331,7 @@ public abstract class StringUtils {
 	}
 
 	/**
+	 * 判断字符串是否以指定字符串开头，忽略大小写
 	 * Test if the given {@code String} starts with the specified prefix,
 	 * ignoring upper/lower case.
 	 * @param str the {@code String} to check
@@ -331,6 +344,7 @@ public abstract class StringUtils {
 	}
 
 	/**
+	 * 判断字符串是否以指定字符串结尾，忽略大小写
 	 * Test if the given {@code String} ends with the specified suffix,
 	 * ignoring upper/lower case.
 	 * @param str the {@code String} to check
@@ -343,11 +357,13 @@ public abstract class StringUtils {
 	}
 
 	/**
+	 * 测试给定字符串是否与给定索引处的给定子字符串匹配
+	 *
 	 * Test whether the given string matches the given substring
 	 * at the given index.
-	 * @param str the original string (or StringBuilder)
-	 * @param index the index in the original string to start matching against
-	 * @param substring the substring to match at the given index
+	 * @param str the original string (or StringBuilder)	原始字符串(或StringBuilder)
+	 * @param index the index in the original string to start matching against 要开始匹配的原始字符串中的索引
+	 * @param substring the substring to match at the given index	要在给定索引处匹配的子字符串
 	 */
 	public static boolean substringMatch(CharSequence str, int index, CharSequence substring) {
 		if (index + substring.length() > str.length()) {
@@ -488,6 +504,8 @@ public abstract class StringUtils {
 	}
 
 	/**
+	 * 得到以.分割的最后一个值，可以非常方便的获取类似类名或者文件后缀
+	 *
 	 * Unqualify a string qualified by a separator character. For example,
 	 * "this:name:is:qualified" returns "qualified" if using a ':' separator.
 	 * @param qualifiedName the qualified name
@@ -498,6 +516,7 @@ public abstract class StringUtils {
 	}
 
 	/**
+	 * 首字母大写首字母大写
 	 * Capitalize a {@code String}, changing the first letter to
 	 * upper case as per {@link Character#toUpperCase(char)}.
 	 * No other letters are changed.
@@ -509,6 +528,7 @@ public abstract class StringUtils {
 	}
 
 	/**
+	 * 取消首字母大写
 	 * Uncapitalize a {@code String}, changing the first letter to
 	 * lower case as per {@link Character#toLowerCase(char)}.
 	 * No other letters are changed.
@@ -542,6 +562,8 @@ public abstract class StringUtils {
 	}
 
 	/**
+	 * 获取文件名,就不需要再使用FilenameUtils
+	 *
 	 * Extract the filename from the given Java resource path,
 	 * e.g. {@code "mypath/myfile.txt" -> "myfile.txt"}.
 	 * @param path the file path (may be {@code null})
@@ -558,6 +580,7 @@ public abstract class StringUtils {
 	}
 
 	/**
+	 * 获取文件后缀名
 	 * Extract the filename extension from the given Java resource path,
 	 * e.g. "mypath/myfile.txt" -> "txt".
 	 * @param path the file path (may be {@code null})
@@ -583,6 +606,8 @@ public abstract class StringUtils {
 	}
 
 	/**
+	 * 截取掉文件路径后缀
+	 *
 	 * Strip the filename extension from the given Java resource path,
 	 * e.g. "mypath/myfile.txt" -> "mypath/myfile".
 	 * @param path the file path
@@ -603,6 +628,8 @@ public abstract class StringUtils {
 	}
 
 	/**
+	 * 找到给定的文件，和另一个相对路径的文件，返回第二个文件的全路径
+	 *
 	 * Apply the given relative path to the given Java resource path,
 	 * assuming standard Java folder separation (i.e. "/" separators).
 	 * @param path the path to start from (usually a full file path)
