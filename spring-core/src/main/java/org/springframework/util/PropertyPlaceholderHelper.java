@@ -211,11 +211,21 @@ public class PropertyPlaceholderHelper {
 		return result.toString();
 	}
 
+	/**
+	 * 解析{{{文字}}} ，为了解析这种情况的，所以才会有withinNestedPlaceholder变量
+	 * @param buf
+	 * @param startIndex
+	 * @return
+	 */
 	private int findPlaceholderEndIndex(CharSequence buf, int startIndex) {
+		//获取前缀后面一个字符的索引
 		int index = startIndex + this.placeholderPrefix.length();
 		int withinNestedPlaceholder = 0;
+		//如果前缀后面还有字符的话
 		while (index < buf.length()) {
+			//判断源字符串在index处是否与后缀匹配
 			if (StringUtils.substringMatch(buf, index, this.placeholderSuffix)) {
+				//如果匹配到后缀,但此时前缀数量>后缀,则继续匹配后缀
 				if (withinNestedPlaceholder > 0) {
 					withinNestedPlaceholder--;
 					index = index + this.placeholderSuffix.length();
@@ -225,10 +235,13 @@ public class PropertyPlaceholderHelper {
 				}
 			}
 			else if (StringUtils.substringMatch(buf, index, this.simplePrefix)) {
+				//判断源字符串在index处是否与前缀匹配,若匹配,说明前缀后面还是前缀,则把前缀长度累加到index上,继续循环寻找后缀
+				//withinNestedPlaceholder确保前缀和后缀成对出现后
 				withinNestedPlaceholder++;
 				index = index + this.simplePrefix.length();
 			}
 			else {
+				//如果index出既不能和suffix又不能和simplePrefix匹配,则自增,继续循环
 				index++;
 			}
 		}
